@@ -4,6 +4,7 @@ dist-desktop/
 release/
 *.sqlite*
 .test-data/
+docs/screenshot-*.png
 coverage/
 playwright-report/
 test-results/
