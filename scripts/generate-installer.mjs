@@ -10,7 +10,7 @@ const removeDirs=dirs.sort((a,b)=>b.length-a.length).map(dir=>`  RMDir "$INSTDIR
 const script=`Unicode true
 !include "MUI2.nsh"
 Name "Noryum"
-OutFile "..\\release\\Noryum-0.1.0-Setup-x64.exe"
+OutFile "..\\release\\Noryum-0.1.2-Setup-x64.exe"
 InstallDir "$LOCALAPPDATA\\Programs\\Noryum"
 RequestExecutionLevel user
 SetCompressor /SOLID lzma
@@ -26,10 +26,10 @@ BrandingText "Noryum · See the patterns. Shape the outcome."
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_LANGUAGE "Spanish"
-VIProductVersion "0.1.0.0"
+VIProductVersion "0.1.2.0"
 VIAddVersionKey /LANG=1034 "ProductName" "Noryum"
 VIAddVersionKey /LANG=1034 "FileDescription" "Instalador de Noryum"
-VIAddVersionKey /LANG=1034 "FileVersion" "0.1.0"
+VIAddVersionKey /LANG=1034 "FileVersion" "0.1.2"
 VIAddVersionKey /LANG=1034 "LegalCopyright" "Noryum"
 Section "Noryum"
   SetShellVarContext current
@@ -39,7 +39,7 @@ Section "Noryum"
   CreateShortcut "$DESKTOP\\Noryum.lnk" "$INSTDIR\\Noryum.exe"
   CreateShortcut "$SMPROGRAMS\\Noryum.lnk" "$INSTDIR\\Noryum.exe"
   WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Noryum" "DisplayName" "Noryum"
-  WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Noryum" "DisplayVersion" "0.1.0"
+  WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Noryum" "DisplayVersion" "0.1.2"
   WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Noryum" "UninstallString" '${quote}$INSTDIR\\Uninstall.exe${quote}'
   WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Noryum" "InstallLocation" "$INSTDIR"
 SectionEnd

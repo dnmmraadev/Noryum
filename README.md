@@ -2,11 +2,11 @@
 
 **See the patterns. Shape the outcome.**
 
-Aplicación de escritorio para Windows que reúne rutinas, bienestar, estudio, ocio y revisión semanal. Interfaz en español, datos locales en SQLite y uso sin cuenta. La primera apertura no contiene registros ficticios.
+Noryum is a Windows desktop app for routines, wellness, study, intentional leisure, analytics, and weekly review. The interface is in Spanish, the data is stored locally in SQLite, and the app does not require an account. First launch contains no fake records.
 
-## Desarrollo
+## Development
 
-Requisitos: Windows x64, Node.js 24 y pnpm. La instalación inicial de dependencias requiere conexión; el uso cotidiano de la aplicación empaquetada no.
+Requirements: Windows x64, Node.js 24, and pnpm. The first dependency install requires a network connection; day-to-day use of the packaged app does not.
 
 ```powershell
 pnpm install --frozen-lockfile
@@ -14,7 +14,7 @@ pnpm exec install-electron
 pnpm dev
 ```
 
-`dev` abre Electron con la interfaz servida por Vite. Los cambios de UI se actualizan durante el desarrollo; después de cambiar el proceso principal o el preload, reiniciar el comando.
+`dev` opens Electron with the UI served by Vite. UI changes reload during development; restart the command after changing the main process or preload.
 
 ```powershell
 pnpm test
@@ -22,55 +22,40 @@ pnpm build
 pnpm test:ui
 ```
 
-`test` ejecuta pruebas de dominio y almacenamiento. `build` comprueba TypeScript y genera `dist/` y `dist-desktop/`. `test:ui` ejecuta la comprobación automatizada del flujo de escritorio sobre la compilación; consultar la evidencia de validación de esta entrega para los resultados efectivamente obtenidos.
+`test` runs domain and storage tests. `build` checks TypeScript and generates `dist/` and `dist-desktop/`. `test:ui` runs the automated desktop flow against the built app; see the validation evidence for the results obtained in this milestone.
 
-## Distribución Windows
+## Windows Distribution
 
-La entrega incluye `release/Noryum-0.1.0-Setup-x64.exe` y una carpeta autónoma `release/Noryum-win32-x64/`. Para usar la carpeta sin instalar, abrir `Noryum.exe` y conservar sus archivos juntos. No requiere Node ni herramientas de desarrollo.
+The current source version is 0.1.2. Packaging targets `release/Noryum-0.1.2-Setup-x64.exe` through the direct NSIS workflow and a standalone folder at `release/Noryum-win32-x64/`. Version 0.1.2 does not yet include a newly verified installer. To use the folder without installing, open `Noryum.exe` and keep its companion files together. Node and developer tools are not required.
 
 ```powershell
 pnpm package
 ```
 
-El comando compila y usa electron-builder para producir un ejecutable portable y un instalador NSIS x64 en `release/`. La primera ejecución de empaquetado puede descargar herramientas auxiliares. La configuración de este hito no firma los ejecutables: una publicación con identidad de editor requiere configurar un certificado de firma.
+The command builds the app and uses electron-builder to produce a portable executable and an x64 NSIS installer in `release/`. The first packaging run may download helper tools. This milestone does not sign the binaries; publishing with a verified publisher identity requires a signing certificate.
 
-En el entorno aislado de esta entrega se construyó la carpeta autónoma con `node scripts/package-portable.mjs` y el instalador con NSIS 3.12 directamente. El manifiesto de desinstalación se genera con `node scripts/generate-installer.mjs`; después ejecutar `makensis scripts/installer.nsi` con NSIS en PATH y NSISDIR configurado. La desinstalación elimina únicamente archivos enumerados del programa y conserva los datos personales. `pnpm package:folder` reproduce la carpeta autónoma; el icono del EXE se puede aplicar con `rcedit --set-icon public/icon.ico`.
+Inside the isolated delivery environment, the standalone folder was built with `node scripts/package-portable.mjs` and the installer was built directly with NSIS 3.12. The uninstall manifest is generated with `node scripts/generate-installer.mjs`; then run `makensis scripts/installer.nsi` with NSIS on PATH and `NSISDIR` configured. Uninstall removes only enumerated program files and preserves personal data. `pnpm package:folder` reproduces the standalone folder; the executable icon can be applied with `rcedit --set-icon public/icon.ico`.
 
-## Datos y copias
+## Data And Backups
 
-La base de datos se crea en `app.getPath('userData')/noryum.sqlite`, dentro del perfil del usuario de Windows. Los registros permanecen al cerrar y volver a abrir Noryum. El ejecutable portable también usa ese perfil: no guarda automáticamente los datos junto al archivo `.exe`.
+The database is created at `app.getPath('userData')/noryum.sqlite`, inside the current Windows user profile. Records persist after closing and reopening Noryum. The portable executable also uses that profile; it does not automatically store data next to the `.exe`.
 
-En Ajustes se puede exportar una copia local consistente de SQLite. Conservar las copias en una ubicación protegida: incluyen los registros personales y este MVP no los cifra. No copiar únicamente el archivo principal de SQLite mientras la aplicación está abierta; usar la función de copia para incluir los cambios pendientes.
+Settings can export a consistent local SQLite backup. Keep backups in a protected location: they include personal records and this MVP does not encrypt them. Do not copy only the main SQLite file while the app is open; use the backup function so pending WAL changes are included.
 
-La restauración todavía es manual. Cerrar Noryum completamente y conservar una copia de toda su carpeta de datos antes de cambiar archivos. En la carpeta activa, apartar `noryum.sqlite` y sus posibles archivos `noryum.sqlite-wal` y `noryum.sqlite-shm` hacia una carpeta de resguardo; después copiar el respaldo exportado con el nombre `noryum.sqlite` y volver a abrir Noryum. No reutilizar archivos WAL/SHM de otra base. Si falla la apertura, cerrar la aplicación y recuperar el conjunto original completo. Usar una versión de Noryum igual o posterior a la que creó la copia; una base de una versión futura se rechaza para protegerla.
+Restore is still manual. Close Noryum completely and keep a copy of the entire active data folder before replacing files. In the active folder, move `noryum.sqlite` and any `noryum.sqlite-wal` and `noryum.sqlite-shm` files to a safeguard folder; then copy the exported backup as `noryum.sqlite` and reopen Noryum. Do not reuse WAL/SHM files from another database. If startup fails, close the app and restore the original complete set. Use the same or a newer Noryum version than the one that created the backup; a database from a future version is rejected to protect it.
 
-En Windows, la carpeta de datos predeterminada está bajo `%APPDATA%\noryum` en esta entrega. Para pruebas se puede definir `NORYUM_DATA_DIR` antes de arrancar Electron; esa opción cambia la ubicación de los datos y debe apuntar a una carpeta separada de la información personal.
+On Windows, the default data folder is under `%APPDATA%\noryum` in this delivery. Tests can set `NORYUM_DATA_DIR` before starting Electron; that option changes the data location and must point to a folder separate from personal information.
 
-No se requiere una cuenta, servicio remoto ni clave de API. Los datos del MVP se usan para resúmenes descriptivos; no hay diagnóstico médico, medición validada de bienestar ni puntuación global de vida.
+No account, remote service, or API key is required. MVP data is used for descriptive summaries only; Noryum does not provide medical diagnosis, a validated wellness measure, or a universal life score.
 
-## Documentación
+## Documentation
 
-- [Decisión técnica y alternativas evaluadas](docs/technical-decision.md)
-- [Arquitectura y mantenimiento](docs/architecture.md)
-- [Modelo de datos y definiciones de métricas](docs/data-model.md)
-- [Principios y alcance del producto](docs/product.md)
-- [Escalas subjetivas: evidencia y límites](docs/measurement.md)
-- [Resultados de validación y límites](docs/validation.md)
-- [Notas de release 0.1.0](docs/release-0.1.0.md)
-- [Seguridad y privacidad local](SECURITY.md)
-
-## Publicación en GitHub
-
-El repositorio versiona el código fuente, documentación, pruebas y assets necesarios para reproducir el MVP. Los binarios de Windows se publican como artefactos de release y no se incluyen en Git para evitar historial pesado.
-
-Flujo recomendado para una release:
-
-```powershell
-pnpm install --frozen-lockfile
-pnpm test
-pnpm build
-pnpm package:folder
-node scripts/generate-installer.mjs
-```
-
-Crear una etiqueta `v0.1.0`, adjuntar `Noryum-0.1.0-Setup-x64.exe`, `Noryum-0.1.0-source.zip` y `Noryum-SHA256SUMS.txt`, y copiar el contenido de [docs/release-0.1.0.md](docs/release-0.1.0.md) como descripción.
+- [Technical decision and evaluated alternatives](docs/technical-decision.md)
+- [Architecture and maintenance](docs/architecture.md)
+- [Data model and metric definitions](docs/data-model.md)
+- [Product principles and scope](docs/product.md)
+- [Subjective scales: evidence and limits](docs/measurement.md)
+- [Validation results and limits](docs/validation.md)
+- [Release notes 0.1.2](docs/release-0.1.2.md)
+- [Release notes 0.1.0 (historical)](docs/release-0.1.0.md)
+- [Local security and privacy](SECURITY.md)

@@ -1,48 +1,47 @@
-# Arquitectura
+# Architecture
 
-## Stack y decisión
+## Stack And Decision
 
-Electron 44.3, React, TypeScript y Vite; SQLite mediante `node:sqlite` en el proceso principal. pnpm administra dependencias; esbuild compila el shell. La entrega usa una carpeta autónoma y NSIS directo; electron-builder queda configurado como ruta alternativa para portable/NSIS Windows x64. Las versiones exactas instaladas están fijadas en el manifiesto y lockfile.
+Noryum uses Electron 44.3, React, TypeScript, and Vite, with SQLite through `node:sqlite` in the main process. pnpm manages dependencies and esbuild bundles the desktop shell. This delivery uses a standalone folder and direct NSIS packaging; electron-builder remains configured as an alternate path for Windows x64 portable and NSIS builds. Exact installed versions are pinned in the manifest and lockfile.
 
-Se acepta el coste de memoria y distribución de Chromium/Node por la rapidez de implementación verificable, el ecosistema de UI y la separación tipada de procesos. WPF, WinUI y Tauri se comparan en [ADR-001](technical-decision.md). Si el presupuesto de recursos cambia, medir antes de migrar.
+The Chromium/Node memory and distribution cost is accepted for this first milestone because it enabled a verifiable implementation, a mature UI ecosystem, and a typed boundary between processes. WPF, WinUI, and Tauri are compared in [ADR-001](technical-decision.md). If resource budgets change, measure before migrating.
 
-## Límites de la aplicación
+## Application Boundaries
 
 ```text
-src/ui/                 React: páginas, formularios y visualización
-        ↓ API limitada de window.noryum
-desktop/preload.ts      contextBridge: contrato de acceso
+src/ui/                 React pages, forms, and visualization
+        ↓ limited window.noryum API
+desktop/preload.ts      contextBridge access contract
         ↓ IPC
-desktop/main.ts         ventana, ciclo de vida, handlers y diálogos de archivo
+desktop/main.ts         window, lifecycle, handlers, and file dialogs
         ↓
-src/data/               validación, consultas SQLite y migraciones
-src/domain/             tipos y cálculos puros, reutilizables en pruebas
-tests/                  pruebas de riesgo: fechas, métricas y persistencia
-scripts/                desarrollo, compilación y comprobación de escritorio
+src/data/               validation, SQLite queries, and migrations
+src/domain/             pure types and calculations, reused by tests
+tests/                  risk-focused tests for dates, metrics, and persistence
+scripts/                development, build, packaging, and desktop checks
 ```
 
-El renderer no recibe Node ni acceso directo al filesystem o a SQL. El preload expone operaciones concretas, no un canal IPC arbitrario. Aislamiento de contexto y sandbox son parte del límite de seguridad. Los datos recibidos se validan otra vez en el proceso principal; los tipos TypeScript no sustituyen esa validación.
+The renderer does not receive Node, filesystem access, or direct SQL access. The preload exposes concrete operations, not an arbitrary IPC channel. Context isolation and sandboxing are part of the security boundary. Incoming data is validated again in the main process; TypeScript types do not replace runtime validation.
 
-El frontend presenta datos y solicita cambios. La persistencia conserva hechos y relaciones; las funciones de dominio calculan agregados. No existe backend remoto, infraestructura cloud ni contenido web remoto necesario para la operación cotidiana.
+The frontend displays data and requests changes. Persistence stores facts and relationships; domain functions compute aggregates. There is no remote backend, cloud infrastructure, or remote web content required for daily operation.
 
-## Persistencia y tiempo
+## Persistence And Time
 
-La base predeterminada es `app.getPath('userData')/noryum.sqlite`. SQLite mantiene entidades relacionales, claves foráneas e índices de fecha. Las migraciones versionadas deben ejecutarse de forma transaccional antes de atender operaciones. Datos iniciales vacíos; fixtures exclusivamente en pruebas.
+The default database is `app.getPath('userData')/noryum.sqlite`. SQLite stores relational entities, foreign keys, and date indexes. Versioned migrations must run transactionally before operations are served. Initial data is empty; fixtures exist only in tests.
 
-Los días de registro se representan como fechas civiles `YYYY-MM-DD`; los instantes reales se conservan como timestamps. No derivar el día local cortando un timestamp UTC. Una sesión nocturna de sueño se atribuye al día de despertar. Las reglas de agregación, intervalos de semana y denominadores se documentan en [data-model.md](data-model.md).
+Log days are represented as civil dates, `YYYY-MM-DD`; real instants are stored as timestamps. Do not derive a local day by slicing a UTC timestamp. An overnight sleep record is assigned to the wake date. Aggregation rules, week windows, and denominators are documented in [data-model.md](data-model.md).
 
-La copia de seguridad usa SQLite para obtener un archivo consistente. Una futura importación/restauración debe validar formato, versión e integridad y conservar una copia previa antes de reemplazar información. Este hito no incorpora sincronización ni cifrado de base o copias.
+Backup uses SQLite to produce a consistent file. A future import/restore flow must validate format, version, and integrity, and preserve a previous copy before replacing data. This milestone does not include sync or encryption for the database or backups.
 
-## Mantenimiento y límites
+## Maintenance And Limits
 
-- Mantener Electron al día con pruebas de compilación y lanzamiento al actualizarlo.
-- Las consultas síncronas de `node:sqlite` son adecuadas para este volumen inicial; medir latencia y trasladar trabajo pesado a un worker si el historial lo exige.
-- No registrar notas personales o payloads completos en logs; los errores deben permitir resolver el fallo sin exponer contenido sensible.
-- La vista de desarrollo en Vite requiere Electron para acceder a datos reales. No crear una persistencia ficticia del navegador que oculte fallos de IPC.
-- El idioma inicial es español. Centralizar futuras traducciones antes de añadir otro idioma; no asumir que cada texto ya cuenta con un catálogo de localización.
-- No hay autoactualización ni firma de editor configurada para este hito. El empaquetado es reproducible a partir del código y lockfile, pero futuras publicaciones requieren una política de actualización y firma.
+- Keep Electron current and verify build plus launch behavior when updating it.
+- Synchronous `node:sqlite` queries are suitable for this initial data volume; measure latency and move heavy work to a worker if history size requires it.
+- Do not log personal notes or full request payloads; errors should be useful without exposing sensitive content.
+- The Vite development view requires Electron for real data access. Do not create browser-only fake persistence that hides IPC failures.
+- The initial product language is Spanish. Centralize future translations before adding another language; do not assume every string already has a localization catalog.
+- There is no auto-update channel or publisher signing for this milestone. Packaging is reproducible from the code and lockfile, but future releases need an update and signing policy.
 
-## Validación
+## Validation
 
-`pnpm test` cubre reglas de dominio y SQLite; `pnpm build` valida tipos y compilación; `pnpm test:ui` comprueba flujos con Electron. Verificar por separado la persistencia tras reinicio y el artefacto empaquetado. Estos comandos describen el proceso de verificación y no constituyen por sí solos una afirmación de que todas las comprobaciones hayan pasado.
-
+`pnpm test` covers domain rules and SQLite. `pnpm build` validates types and compilation. `pnpm test:ui` checks desktop flows with Electron. Verify restart persistence and the packaged artifact separately. These commands describe the verification process; by themselves they are not a claim that every check has passed.

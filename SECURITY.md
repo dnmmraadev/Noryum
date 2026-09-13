@@ -12,7 +12,7 @@ Noryum is a local-first Windows desktop application. It stores personal records 
 
 - The production app starts with an empty database.
 - Personal data stays on the local machine unless the user manually exports or copies it.
-- Backups created from Ajustes include personal records and are not encrypted by this MVP.
+- Backups created from Settings include personal records and are not encrypted by this MVP.
 - Test and QA databases are excluded from the repository and distribution package.
 
 ## Known Limits

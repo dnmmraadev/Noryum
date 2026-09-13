@@ -1,35 +1,34 @@
-# Modelo de datos y cálculos
+# Data Model And Calculations
 
-SQLite guarda tablas relacionales y claves foráneas. `schema_migrations` registra versiones; cada migración se confirma completa o se revierte completa. Una versión futura desconocida bloquea la apertura para evitar escrituras incompatibles. `preferences` es un registro; no hay cuentas ni datos de demostración.
+SQLite stores relational tables and foreign keys. `schema_migrations` records versions; each migration either commits completely or rolls back completely. An unknown future version blocks startup to avoid incompatible writes. `preferences` is a single record. There are no accounts and no demo data.
 
-## Entidades
+## Entities
 
-- `templates` → `routines`: plantilla recurrente y ocurrencia con fecha civil, hora prevista e instante real de finalización. La plantilla declara inicio y días representados por JS (domingo=0, lunes=1). Solo el pequeño conjunto de días se serializa como JSON; los registros no son blobs JSON. Una restricción única evita duplicados por plantilla/fecha. `routine_exclusions` impide que una ocurrencia eliminada reaparezca.
-- `checkins`: múltiples observaciones por día, instante de registro, cuatro escalas ordinales de 1–5 y `scaleVersion=1`. No representan un instrumento clínico ni diagnóstico.
-- `sleep`: un episodio principal por fecha de despertar; hora prevista de acostarse, hora real, inicio de sueño estimado opcional, despertar y calidad subjetiva opcional.
-- `activities`: tipo, minutos e intensidad percibida 1–5.
-- `programs` → `subjects` → `modules`: estructura de aprendizaje. `study` referencia un programa y opcionalmente una asignatura/módulo perteneciente a él; guarda tiempo y resultado descrito. Completar un módulo indica avance de contenido, no dominio ni retención.
-- `leisure`: categoría, descripción, minutos e intencionalidad declarada.
-- `reviews`: reflexión única por lunes, con lo que funcionó, dificultades y próximo ajuste.
+- `templates` -> `routines`: recurring template and occurrence with civil date, planned time, and real completion instant. The template declares a start date and weekdays represented by JavaScript values, where Sunday is 0 and Monday is 1. Only this small weekday set is serialized as JSON; records are not JSON blobs. A unique constraint prevents duplicates per template/date. `routine_exclusions` prevents a deleted occurrence from reappearing.
+- `checkins`: multiple observations per day, recording instant, four ordinal 1-5 scales, and `scaleVersion=1`. These are not a clinical instrument or diagnosis.
+- `sleep`: one primary episode per wake date; intended bedtime, real bedtime, optional estimated sleep start, wake time, and optional subjective quality.
+- `activities`: type, minutes, and perceived intensity from 1 to 5.
+- `programs` -> `subjects` -> `modules`: learning structure. `study` references a program and optionally a subject/module that belongs to it; it stores time and described output. Completing a module marks content progress, not mastery or retention.
+- `leisure`: category, description, minutes, and declared intentionality.
+- `reviews`: one reflection per Monday, covering what worked, what was difficult, and the next adjustment.
 
-## Fechas, recurrencia y edición
+## Dates, Recurrence, And Editing
 
-Fechas civiles `YYYY-MM-DD` agrupan los registros en el día elegido. Para sueño, el backend exige que esa fecha coincida con el despertar convertido a la zona local del sistema; acepta instantes UTC enviados por la interfaz. Una creación duplicada de sueño se rechaza sin sobrescribir datos; editar requiere el ID explícito del registro. Horas previstas `HH:mm` son locales. Los instantes reales incluyen zona UTC/offset; las diferencias de sueño usan tiempo transcurrido real y respetan cambios DST. Los check-ins se ordenan por instante real, no por representación textual del offset. La aritmética de días civiles usa UTC mediodía, no sumar 24 horas a instantes locales.
+Civil dates, `YYYY-MM-DD`, group records for the selected day. For sleep, the backend requires that date to match the wake time converted to the system local timezone; it accepts UTC instants sent by the UI. Duplicate sleep creation is rejected without overwriting data; editing requires the explicit record ID. Planned `HH:mm` times are local. Real instants include UTC/offset information; sleep differences use real elapsed time and respect DST changes. Check-ins are sorted by real instant, not by the textual offset representation. Civil-day arithmetic uses UTC noon rather than adding 24 hours to local instants.
 
-Al consultar un día se materializan su semana de lunes a domingo y la anterior, respetando el inicio de cada plantilla. Esto da planes comparables de dos semanas sin crear años de datos anticipados. Reabrir una fecha no duplica ocurrencias ni borra completados. Editar una plantilla actualiza transaccionalmente título, hora y nota de las ocurrencias pendientes de hoy en adelante, y retira las que dejan de coincidir con sus días/inicio. Desactivarla retira esos planes pendientes y detiene nueva generación. Las ocurrencias pasadas, completadas y exclusiones por borrado individual se conservan. Eliminar la plantilla conserva sus ocurrencias históricas. Editar/borrar una ocurrencia cambia solo esa fecha. Limitación del MVP: consultar una semana histórica nunca materializada genera sus planes con la definición vigente de la plantilla; todavía no existe versionado histórico de plantillas.
+When a day is queried, Noryum materializes that Monday-Sunday week and the previous one, respecting each template start date. This gives comparable two-week plans without creating years of future rows. Reopening a date does not duplicate occurrences or erase completions. Editing a template transactionally updates title, time, and note for pending occurrences from today onward, and removes occurrences that no longer match its days or start date. Deactivating a template removes those pending plans and stops new generation. Past occurrences, completed occurrences, and individual deletion exclusions are preserved. Deleting the template preserves historical occurrences. Editing/deleting an occurrence affects only that date. MVP limitation: querying a historical week that was never materialized generates plans from the template's current definition; historical template versioning does not exist yet.
 
-El repositorio valida datos nuevamente al entrar desde IPC, usa consultas parametrizadas y limita tipos de operación. Duraciones registradas: 1–1440 minutos; sueño: mayor que cero y hasta 24 horas; inicio de sueño entre acostarse y despertar. No se aceptan timestamps sin zona. El respaldo usa `node:sqlite.backup` para obtener una copia consistente incluso con WAL. Restauración/importación no forman parte de la interfaz de este hito.
+The repository validates data again at the IPC boundary, uses parameterized queries, and limits operation types. Logged durations: 1-1440 minutes. Sleep: greater than zero and up to 24 hours, with sleep start between bedtime and wake time. Timestamps without timezone are rejected. Backup uses `node:sqlite.backup` to produce a consistent copy even with WAL. Restore/import is not part of this milestone's UI.
 
-## Definiciones de métricas
+## Metric Definitions
 
-- Sueño estimado = despertar − inicio estimado, o despertar − acostarse cuando no se conoce el inicio. Ese fallback estima tiempo en cama; no mide fisiológicamente el sueño. Promedio y desviación estándar poblacional de duraciones disponibles; variabilidad requiere al menos dos episodios.
-- Energía/ánimo/estrés/concentración = media dentro del día y después media de los días observados, evitando dar más peso a días con muchos check-ins. Por ser escalas ordinales, son resúmenes descriptivos aproximados.
-- Cumplimiento de rutina = completadas / planificadas × 100. Sin planes el resultado es ausente, no cero.
-- Estudio = suma de minutos. Resultados = sesiones con descripción de resultado; no es conteo validado de ejercicios ni aprendizaje demostrado.
-- Actividad = suma de minutos, sesiones y fechas distintas con registro.
-- Ocio intencional = minutos declarados intencionales / minutos de ocio registrados. No se compara con un ideal moral ni con toda la jornada.
-- Semana = lunes–domingo. Para la semana seleccionada hasta un día, la comparación anterior usa exactamente los mismos días de semana; ambas coberturas aparecen en las métricas. Ninguna comparación implica causalidad.
-- Datos faltantes: promedios sin observaciones devuelven `null`. Sumas de registros devuelven 0; esto significa nada registrado, no prueba de ausencia de comportamiento. Sueño y check-in incluyen número de días observados.
+- Estimated sleep = wake time minus estimated sleep start, or wake time minus bedtime when sleep start is unknown. That fallback estimates time in bed; it does not physiologically measure sleep. Average and population standard deviation are computed from available durations; variability requires at least two episodes.
+- Energy/mood/stress/concentration = average within each day, then average across observed days, avoiding extra weight for days with many check-ins. Because these are ordinal scales, the averages are approximate descriptive summaries.
+- Routine completion = completed / planned * 100. With no plans, the result is missing, not zero.
+- Study = sum of minutes. Outputs = sessions with an output description; this is not a validated count of exercises or demonstrated learning.
+- Activity = sum of minutes, sessions, and distinct recorded dates.
+- Intentional leisure = minutes declared intentional / recorded leisure minutes. It is not compared to a moral ideal or the whole day.
+- Week = Monday-Sunday. For the selected week through a selected day, the previous comparison uses exactly the same weekdays; both coverages are included in the metrics. No comparison implies causality.
+- Missing data: averages with no observations return `null`. Record sums return 0; this means nothing was recorded, not proof that the behavior did not happen. Sleep and check-ins include observed-day counts.
 
-`src/domain/analytics.ts` contiene cálculos puros. `tests/data.test.ts` cubre reinicio, copia SQLite, fallo de migración, recurrencia/eliminación, validación, jerarquía, cambio de año, años bisiestos, DST, datos ausentes y comparaciones semanales equivalentes.
-
+`src/domain/analytics.ts` contains pure calculations. `tests/data.test.ts` covers restart, SQLite backup, migration failure, recurrence/deletion, validation, hierarchy, year boundaries, leap years, DST, missing data, and equivalent weekly comparisons.

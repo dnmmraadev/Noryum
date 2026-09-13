@@ -1,47 +1,55 @@
-# Noryum — decisión técnica / ADR-001
+# Noryum Technical Decision / ADR-001
 
-Fecha: 2026-09-12. Estado: aceptada para el primer hito.
+Date: 2026-09-12. Status: accepted for the first milestone.
 
-## Interpretación y alcance
-Un espacio personal para planear, registrar y entender la vida cotidiana. El MVP integra rutinas diarias, sueño/actividad/check-ins, estructura de estudio y sesiones, ocio intencional y reflexión semanal. Datos reales, sin cuenta ni conexión, interfaz en español y sin puntuación universal.
+## Interpretation And Scope
 
-## Alternativas evaluadas
-| Opción | Ventajas para Noryum | Costes y decisión |
+Noryum is a personal space for planning, recording, and understanding everyday life. The MVP brings together daily routines, sleep/activity/check-ins, study structure and sessions, intentional leisure, and weekly reflection. It uses real data, requires no account or connection, keeps the interface in Spanish, and does not produce a universal score.
+
+## Evaluated Alternatives
+
+| Option | Benefits For Noryum | Costs And Decision |
 | --- | --- | --- |
-| WPF + C# + SQLite | UI nativa, ecosistema maduro, buen acceso a Windows, publicación autónoma | Excelente alternativa Windows; requiere SDK ausente en este equipo y mayor trabajo específico para gráficos e interacción visual. |
-| WinUI 3 + C# | Plataforma moderna recomendada por Microsoft, accesibilidad e integración Windows | Windows App SDK y empaquetado agregan configuración; menor velocidad para este primer hito. |
-| Tauri 2 + React + SQLite | WebView del sistema, distribución menor, separación Rust/UI | Requiere Rust, C++ Build Tools y WebView2; no están disponibles los toolchains de compilación. Mantener dos lenguajes aumenta el coste inicial. |
-| Electron + React + TypeScript + SQLite | Un ecosistema, gráficos SVG, IPC tipado, pruebas reales de escritorio y distribución Windows directa | Incluye Chromium/Node: mayor tamaño y memoria. Se acepta explícitamente este coste por mantenibilidad, rapidez de entrega verificable y coherencia de la UI. |
+| WPF + C# + SQLite | Native UI, mature ecosystem, strong Windows access, standalone publishing | Excellent Windows option; the SDK was absent on this machine and the visual/interactive layer would take more platform-specific work. |
+| WinUI 3 + C# | Modern Microsoft-recommended platform, accessibility, and Windows integration | Windows App SDK and packaging add setup cost; slower path for this first milestone. |
+| Tauri 2 + React + SQLite | System WebView, smaller distribution, Rust/UI separation | Requires Rust, C++ Build Tools, and WebView2; the required toolchains were not available. Maintaining two languages raises initial cost. |
+| Electron + React + TypeScript + SQLite | One ecosystem, SVG graphics, typed IPC, real desktop testing, and direct Windows distribution | Includes Chromium/Node, increasing size and memory. This cost is accepted for maintainability, delivery speed, and UI coherence. |
 
-## Decisión
-Electron estable disponible (versión exacta fijada al instalar), React + TypeScript, Vite y SQLite integrado en Node del proceso principal. React ofrece componentes y controles accesibles; Svelte reduciría algo de código y Vue también sería viable, sin una ventaja decisiva para este alcance. SQLite evita un servicio y permite agregaciones relacionales; IndexedDB complica backups consultables y JSON plano dificulta integridad/migraciones. No se usa un backend remoto.
+## Decision
 
-## Arquitectura
-Renderer React → API limitada del preload → handlers IPC → servicios de dominio → repositorio SQLite. Renderer aislado, sandbox, sin Node, sin contenido remoto. Validación en el proceso principal. Migraciones versionadas/transaccionales. Cálculos puros separados. Fechas civiles locales para agrupación y timestamps ISO con zona para instantes. Backups consistentes mediante API SQLite. Datos iniciales vacíos; ejemplos solo en pruebas.
+Use the available stable Electron version, React + TypeScript, Vite, and SQLite integrated through Node in the main process. React provides accessible components and controls; Svelte would reduce some code and Vue would also be viable, but neither offers a decisive advantage for this scope. SQLite avoids a service and supports relational aggregates; IndexedDB complicates inspectable backups and plain JSON weakens integrity and migrations. No remote backend is used.
 
-## Modelo inicial
-Preferences; RoutineTemplate y RoutineOccurrence (fecha, hora prevista, instante real); CheckIn (cuatro respuestas y nota); SleepRecord (inicio, despertar, estimación, objetivo, calidad); ActivitySession; Program → Subject → Module; StudySession; LeisureSession; WeeklyReview. Claves foráneas e índices por fecha. Se posponen experimentos, objetivos complejos, evaluaciones, integraciones y cifrado; los IDs y fechas permiten agregarlos mediante migraciones.
+## Architecture
 
-## Estructura y secuencia
-`desktop/` shell y preload; `src/domain/` tipos/cálculos; `src/data/` SQLite y migraciones; `src/ui/` componentes y páginas; `tests/` persistencia, métricas y flujos; `docs/` decisiones y alcance.
+React renderer -> limited preload API -> IPC handlers -> domain services -> SQLite repository. The renderer is isolated, sandboxed, has no Node access, and loads no remote content. Validation happens in the main process. Migrations are versioned and transactional. Pure calculations are separated. Local civil dates are used for grouping, and ISO timestamps with timezone are used for instants. Backups are consistent through the SQLite API. Initial data is empty; examples exist only in tests.
 
-1. Fijar contratos, modelo y migraciones.
-2. Implementar almacenamiento y cálculos con pruebas de fechas, recurrencia y agregación.
-3. Construir shell e interfaz con la identidad de referencia.
-4. Conectar los cinco flujos y exportación de respaldo.
-5. Ejecutar, probar persistencia tras reinicio y corregir problemas.
-6. Empaquetar y comprobar el ejecutable Windows.
+## Initial Model
 
-## Decisiones y riesgos materiales
-- Check-in: cinco niveles con extremos etiquetados, misma escala a lo largo del tiempo. Menos opciones favorecen registro rápido; 1–10 ofrece más detalle aparente. Es una decisión de UX, no un instrumento clínico validado. Guardar versión de escala, no producir diagnósticos ni umbrales médicos.
-- Medias: omitir ausentes, nunca convertirlos en cero; indicar cobertura. Comparar periodos de calendario equivalentes y etiquetar semana en curso.
-- SQLite local no cifra el disco. No almacenar secretos. Copias contienen datos personales; cifrado queda pendiente.
-- Electron exige actualizaciones de seguridad y comprobar tamaño/memoria del artefacto. Si el presupuesto futuro de recursos lo requiere, reevaluar Tauri/WPF con mediciones.
-- Ejecutable sin firma para este hito; firma e instalador comercial requieren identidad/certificado del editor.
+Preferences; RoutineTemplate and RoutineOccurrence with date, planned time, and real instant; CheckIn with four answers and a note; SleepRecord with start, wake, estimate, target, and quality; ActivitySession; Program -> Subject -> Module; StudySession; LeisureSession; WeeklyReview. Foreign keys and date indexes are included. Experiments, complex goals, assessments, integrations, and encryption are postponed; IDs and dates allow them to be added through future migrations.
 
-## Fuentes consultadas
-- [Windows App SDK](https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/) y [WPF](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/overview/).
-- [Tauri: requisitos Windows](https://tauri.app/start/prerequisites/).
-- [Electron: arquitectura incluida](https://www.electronjs.org/docs/latest) y [distribución](https://www.electronjs.org/docs/latest/tutorial/distribution-overview).
+## Structure And Sequence
+
+`desktop/` shell and preload; `src/domain/` types/calculations; `src/data/` SQLite and migrations; `src/ui/` components and pages; `tests/` persistence, metrics, and flows; `docs/` decisions and scope.
+
+1. Define contracts, model, and migrations.
+2. Implement storage and calculations with tests for dates, recurrence, and aggregation.
+3. Build the shell and interface using the reference identity.
+4. Connect the five flows and backup export.
+5. Run the app, test restart persistence, and fix issues.
+6. Package and inspect the Windows executable.
+
+## Material Decisions And Risks
+
+- Check-in: five levels with labeled endpoints, stable within the same scale version. Fewer options favor quick entry; 1-10 offers more apparent detail. This is a UX decision, not a validated clinical instrument. Store scale version, and do not produce medical diagnoses or thresholds.
+- Averages: omit missing observations, never coerce them to zero, and show coverage. Compare equivalent calendar periods and label an in-progress week.
+- Local SQLite does not encrypt the disk. Do not store secrets. Backups contain personal data; encryption is pending.
+- Electron requires security updates and size/memory checks. If future resource budgets require it, reevaluate Tauri or WPF with measurements.
+- The executable is unsigned for this milestone; publisher signing and commercial installation require a publisher identity/certificate.
+
+## Sources Consulted
+
+- [Windows App SDK](https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/) and [WPF](https://learn.microsoft.com/en-us/dotnet/desktop/wpf/overview/).
+- [Tauri: Windows prerequisites](https://tauri.app/start/prerequisites/).
+- [Electron: included architecture](https://www.electronjs.org/docs/latest) and [distribution](https://www.electronjs.org/docs/latest/tutorial/distribution-overview).
 - [Node: SQLite](https://nodejs.org/api/sqlite.html).
-- [Estudio EMA: carga de registro y refinamiento de ítems](https://www.jmir.org/2017/3/e77). Informa el criterio de baja fricción; no valida las cuatro preguntas de Noryum.
+- [EMA study on response burden and item refinement](https://www.jmir.org/2017/3/e77). This informed the low-friction criterion; it does not validate Noryum's four check-in questions.

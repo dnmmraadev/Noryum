@@ -1,35 +1,35 @@
-# Producto
+# Product
 
-**Noryum — See the patterns. Shape the outcome.**
+**Noryum - See the patterns. Shape the outcome.**
 
-Un espacio personal para **planear → hacer → registrar → entender → ajustar**. El objetivo es comprender la vida cotidiana y sostener decisiones propias, sin convertir cada día en una competición de productividad.
+Noryum is a personal space to **plan -> act -> record -> understand -> adjust**. The goal is to understand everyday life and support self-directed decisions without turning each day into a productivity contest.
 
-## Principios
+## Principles
 
-- Datos locales, uso sin cuenta y funcionamiento cotidiano sin conexión.
-- Registrar en pocos pasos; notas opcionales y rutinas reutilizables.
-- Interfaz inicial en español, navegación por teclado y controles con etiquetas claras.
-- Separar hechos registrados, percepciones y cálculos. Ausencia de datos no equivale a cero.
-- Sin diagnóstico, puntuación universal, inferencia causal ni castigos por interrupciones.
-- Ocio y recuperación forman parte de una vida intencional; no son fallos.
-- Mantener un MVP pequeño y comprobable, con almacenamiento relacional y migraciones.
+- Local data, no account, and daily use without a connection.
+- Record in a few steps; notes are optional and routines are reusable.
+- Initial interface in Spanish, keyboard navigation, and clearly labeled controls.
+- Keep recorded facts, perceptions, and calculations separate. Missing data is not zero.
+- No diagnosis, universal score, causal inference, or punishment for interruptions.
+- Leisure and recovery are part of an intentional life; they are not failures.
+- Keep the MVP small and verifiable, with relational storage and migrations.
 
-## Primer hito
+## First Milestone
 
-| Área | Flujo del MVP |
+| Area | MVP Flow |
 | --- | --- |
-| Hoy | Crear y editar rutinas, completar ocurrencias, registrar hora real y consultar la línea temporal. |
-| Bienestar | Registrar sueño, actividad física y check-ins de energía, ánimo, estrés y concentración; ver tendencias de siete días. |
-| Estudio | Crear programas, materias y módulos; registrar sesiones y avance explícito. Tiempo y avance no prueban aprendizaje. |
-| Tiempo libre | Registrar actividad, categoría, duración e intencionalidad, sin valoración moral. |
-| Análisis | Resúmenes descriptivos de datos registrados y cobertura, sin estadísticas causales. |
-| Revisión semanal | Agregados, comparación temporal y reflexiones: qué funcionó, qué no y qué cambiar. |
-| Ajustes | Preferencias personales y copia de seguridad local. |
+| Hoy | Create and edit routines, complete occurrences, record actual time, and inspect the timeline. |
+| Bienestar | Record sleep, physical activity, and check-ins for energy, mood, stress, and concentration; view seven-day trends. |
+| Estudio | Create programs, subjects, and modules; record sessions and explicit progress. Time and progress do not prove learning. |
+| Tiempo libre | Record activity, category, duration, and intentionality without moral scoring. |
+| Análisis | Descriptive summaries of recorded data and coverage, without causal statistics. |
+| Review semanal | Aggregates, temporal comparison, and reflections: what worked, what did not, and what to change. |
+| Ajustes | Personal preferences and local backup. |
 
-La primera apertura contiene datos vacíos. Las cifras de la referencia visual sirven de inspiración estética y no representan información personal real. La identidad usa una barra lateral azul marino, superficies claras, acentos cian/teal y motivos orbitales discretos.
+First launch contains empty data. The numbers in the visual reference are aesthetic inspiration and do not represent real personal information. The identity uses a navy sidebar, light surfaces, cyan/teal accents, and restrained orbital motifs.
 
-## Límites y siguiente alcance
+## Limits And Next Scope
 
-Se posponen cuentas, sincronización, móvil, wearables, asistentes de IA, funciones sociales, suscripciones, cifrado de copias y experimentos estadísticos. La universidad personal completa —lecciones, evaluaciones, retención, proyectos y programación de repasos— también queda para iteraciones posteriores.
+Accounts, sync, mobile, wearables, AI assistants, social features, subscriptions, backup encryption, and statistical experiments are postponed. The full personal university system - lessons, assessments, retention, projects, and review scheduling - also remains for later iterations.
 
-Antes de ampliar el producto, observar si los cinco flujos principales resultan útiles durante uso cotidiano: tiempo de registro, claridad de resúmenes, correcciones necesarias y facilidad de recuperar los datos. La escala subjetiva y sus límites se explican en [measurement.md](measurement.md).
+Before expanding the product, observe whether the five main flows are useful in daily use: entry time, summary clarity, needed corrections, and ease of data recovery. The subjective scale and its limits are explained in [measurement.md](measurement.md).

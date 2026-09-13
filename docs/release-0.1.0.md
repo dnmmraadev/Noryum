@@ -1,39 +1,39 @@
 # Noryum 0.1.0
 
-Primera entrega funcional de Noryum para Windows x64.
+First functional Noryum delivery for Windows x64.
 
-## Incluye
+## Included
 
-- Aplicación de escritorio Electron + React + TypeScript.
-- Almacenamiento local en SQLite sin cuenta ni servicio remoto.
-- Seis secciones: Hoy, Bienestar, Estudio, Tiempo libre, Análisis y Review semanal.
-- Cinco flujos persistentes: rutinas, bienestar, estudio, ocio intencional y revisión semanal.
-- Exportación local de backup desde Ajustes.
-- Instalador NSIS x64 y carpeta autónoma para Windows.
+- Electron + React + TypeScript desktop app.
+- Local SQLite storage with no account or remote service.
+- Six sections: Hoy, Bienestar, Estudio, Tiempo libre, Análisis, and Review semanal.
+- Five persistent flows: routines, wellness, study, intentional leisure, and weekly review.
+- Local backup export from Settings.
+- NSIS x64 installer and standalone Windows folder.
 
-## Validación
+## Validation
 
-- TypeScript estricto sin errores.
-- Build de renderer y proceso principal correcto.
-- Diez pruebas de dominio y persistencia aprobadas.
-- Recorrido automatizado de escritorio con creación, edición, persistencia tras recarga y validación de aislamiento del renderer.
-- Integridad del instalador verificada con 7-Zip.
+- Strict TypeScript passed without errors.
+- Renderer and main process build completed successfully.
+- Ten domain and persistence tests passed.
+- Automated desktop flow covered creation, editing, reload persistence, and renderer isolation.
+- Installer integrity verified with 7-Zip.
 
-## Artefactos de esta entrega
+## Release Artifacts
 
-Los binarios no se versionan en Git porque son artefactos de release. Esta entrega generó:
+Binaries are not versioned in Git because they are release artifacts. This delivery generated:
 
-| Archivo | SHA-256 |
+| File | SHA-256 |
 | --- | --- |
 | Noryum-0.1.0-Setup-x64.exe | `88a3a97aeb4819d9cbf714c02cf30e5c00118984308e6904522166ca6c616d76` |
 | Noryum.exe | `0e4c54b9ceb4467dc5e41c012248f427ace8044678de0f1af721cb0df46bd20f` |
 | Noryum-0.1.0-source.zip | `c9cfe17d1d30f5a065b10fdb44b1723d39e519d756d773b00a97dc5b6f902a0b` |
 
-## Límites conocidos
+## Known Limits
 
-- Sin firma digital.
-- Sin cifrado local propio.
-- Sin auto-update.
-- Instalación/desinstalación todavía no probada en matriz de equipos limpios.
-- Restauración de backups manual.
-- Métricas descriptivas, sin diagnóstico médico ni inferencia causal.
+- No digital signature.
+- No application-level local encryption.
+- No auto-update.
+- Install/uninstall behavior has not yet been tested across a clean-machine matrix.
+- Manual backup restore.
+- Descriptive metrics only; no medical diagnosis or causal inference.
