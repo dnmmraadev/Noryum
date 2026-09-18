@@ -963,3 +963,26 @@ main {
     grid-template-columns: 1fr;
   }
 }
+
+.graph-resize {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 28px;
+  border: 1px solid var(--line);
+  border-top: 0;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 11px;
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
+}
+.graph-resize:hover,
+.graph-resize:focus-visible {
+  color: var(--text);
+  background: var(--input);
+  outline: 2px solid #659af5;
+  outline-offset: -2px;
+}

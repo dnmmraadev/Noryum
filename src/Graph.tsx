@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useState } from "react";
+import { useMemo, useEffect, useState, useRef } from "react";
 import {
   ReactFlow,
   Background,
@@ -71,6 +71,25 @@ export default function Graph({
   const [instance, setInstance] = useState<ReactFlowInstance<
     Node<CardData>
   > | null>(null);
+  const [height, setHeight] = useState(() => {
+    try {
+      const stored = Number(localStorage.getItem("noryum-roadmap-height"));
+      if (stored >= 320 && stored <= 1400) return stored;
+    } catch {
+      /* Storage is optional for this display preference. */
+    }
+    return window.innerWidth >= 1700 ? 570 : 490;
+  });
+  const drag = useRef<{ y: number; height: number } | null>(null);
+  const resize = (value: number) =>
+    setHeight(Math.min(1400, Math.max(320, value)));
+  useEffect(() => {
+    try {
+      localStorage.setItem("noryum-roadmap-height", String(height));
+    } catch {
+      /* Resizing remains available when storage is disabled. */
+    }
+  }, [height]);
   const graph = useMemo(() => {
     const cp = checkpoints.find((c) => c.id === checkpoint);
     const path = cp ? ancestors(cp.requirements, data.skills) : null;
@@ -133,7 +152,10 @@ export default function Graph({
     });
     const maxY = Math.max(300, ...nodes.map((n) => n.position.y)) + 160;
     checkpoints
-      .filter((c) => !query && !branch && !status && (!checkpoint || c.id === checkpoint))
+      .filter(
+        (c) =>
+          !query && !branch && !status && (!checkpoint || c.id === checkpoint),
+      )
       .forEach((c, i) =>
         nodes.push({
           id: c.id,
@@ -190,35 +212,87 @@ export default function Graph({
     }
   }, [instance, query, branch, status, checkpoint]);
   return (
-    <div className="graph">
-      <ReactFlow
-        nodes={graph.nodes}
-        edges={graph.edges}
-        nodeTypes={nodeTypes}
-        onInit={setInstance}
-        nodesDraggable={false}
-        nodesConnectable={false}
-        minZoom={0.08}
-        maxZoom={1.8}
-        onNodeClick={(_, n) => {
-          if (n.id.startsWith("c") && checkpoints.some((c) => c.id === n.id))
-            onCheckpoint();
-          else if (!n.id.startsWith("branch-")) onSkill(n.id);
-        }}
-        colorMode={data.settings.theme}
-      >
-        <Background gap={24} size={1} />
-        <Controls showInteractive={false} />
-        <MiniMap nodeColor={(n) => n.data.color as string} pannable zoomable />
-      </ReactFlow>
-      <div className="graph-caption">
-        {graph.count} competencies · Drag to explore · Scroll to zoom
-      </div>
-      {!graph.count && (
-        <div className="empty graph-empty">
-          No competencies match these filters.
+    <>
+      <div className="graph" id="roadmap-canvas" style={{ height }}>
+        <ReactFlow
+          nodes={graph.nodes}
+          edges={graph.edges}
+          nodeTypes={nodeTypes}
+          onInit={setInstance}
+          nodesDraggable={false}
+          nodesConnectable={false}
+          minZoom={0.08}
+          maxZoom={1.8}
+          onNodeClick={(_, n) => {
+            if (n.id.startsWith("c") && checkpoints.some((c) => c.id === n.id))
+              onCheckpoint();
+            else if (!n.id.startsWith("branch-")) onSkill(n.id);
+          }}
+          colorMode={data.settings.theme}
+        >
+          <Background gap={24} size={1} />
+          <Controls showInteractive={false} />
+          <MiniMap
+            nodeColor={(n) => n.data.color as string}
+            pannable
+            zoomable
+          />
+        </ReactFlow>
+        <div className="graph-caption">
+          {graph.count} competencies · Drag to explore · Scroll to zoom
         </div>
-      )}
-    </div>
+        {!graph.count && (
+          <div className="empty graph-empty">
+            No competencies match these filters.
+          </div>
+        )}
+      </div>
+      <div
+        className="graph-resize"
+        role="separator"
+        tabIndex={0}
+        aria-label="Roadmap height"
+        aria-controls="roadmap-canvas"
+        aria-orientation="horizontal"
+        aria-valuemin={320}
+        aria-valuemax={1400}
+        aria-valuenow={Math.round(height)}
+        aria-valuetext={`${Math.round(height)} pixels`}
+        onPointerDown={(event) => {
+          if (event.button !== 0) return;
+          event.preventDefault();
+          event.currentTarget.focus();
+          event.currentTarget.setPointerCapture(event.pointerId);
+          drag.current = { y: event.clientY, height };
+        }}
+        onPointerMove={(event) => {
+          if (drag.current)
+            resize(drag.current.height + event.clientY - drag.current.y);
+        }}
+        onPointerUp={() => {
+          drag.current = null;
+        }}
+        onPointerCancel={() => {
+          drag.current = null;
+        }}
+        onLostPointerCapture={() => {
+          drag.current = null;
+        }}
+        onKeyDown={(event) => {
+          const values: Record<string, number> = {
+            ArrowDown: height + 40,
+            ArrowUp: height - 40,
+            Home: 320,
+            End: 1400,
+          };
+          if (event.key in values) {
+            event.preventDefault();
+            resize(values[event.key]);
+          }
+        }}
+      >
+        <span aria-hidden="true">↕</span> Drag to resize map
+      </div>
+    </>
   );
 }
