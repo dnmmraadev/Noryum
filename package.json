@@ -1,62 +1,71 @@
 {
-  "name": "noryum",
-  "version": "0.1.2",
+  "name": "noryum-intelligent-business-engineering",
+  "version": "0.2.0",
   "private": true,
-  "description": "Un espacio personal para ver patrones y dar forma a tu día.",
-  "author": "Noryum",
-  "main": "dist-desktop/main.cjs",
+  "type": "module",
+  "main": "electron/main.cjs",
   "scripts": {
     "dev": "node scripts/dev.mjs",
-    "build": "tsc --noEmit && vite build --configLoader native && node scripts/build.mjs",
-    "test": "node scripts/test.mjs",
-    "test:ui": "node scripts/smoke.cjs",
-    "package": "pnpm build && electron-builder --win portable nsis --x64",
-    "package:folder": "pnpm build && node scripts/package-portable.mjs"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run --configLoader native --pool threads",
+    "build": "tsc --noEmit && node scripts/build.mjs",
+    "desktop": "electron .",
+    "package": "npm run build && node scripts/package.mjs",
+    "preview": "node scripts/preview.mjs",
+    "package:installer": "npm run build && electron-builder --win portable --x64",
+    "format": "prettier --write src electron scripts"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.8.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@playwright/test": "^1.51.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "electron": "44.4.2",
+    "electron-builder": "^26.0.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.9.8",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.0.0",
+    "vite": "^6.0.0",
+    "vitest": "4.1.11",
+    "resedit": "1.7.2",
+    "pe-library": "0.4.1"
   },
   "build": {
-    "appId": "app.noryum.desktop",
+    "appId": "com.noryum.desktop",
     "productName": "Noryum",
     "directories": {
       "output": "release"
     },
     "files": [
       "dist/**/*",
-      "dist-desktop/**/*",
+      "electron/**/*",
       "package.json"
     ],
-    "asar": true,
     "win": {
-      "target": [
-        "portable",
-        "nsis"
-      ],
-      "signAndEditExecutable": false,
-      "icon": "public/icon.ico"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
-    },
-    "artifactName": "Noryum-${version}-${arch}-${target}.${ext}"
+      "target": "portable",
+      "signAndEditExecutable": true,
+      "icon": "assets/icon.ico"
+    }
   },
-  "devDependencies": {
-    "@types/node": "^22.20.2",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^6.1.1",
-    "electron": "44.3.0",
-    "electron-builder": "^26.15.3",
-    "esbuild": "^0.28.2",
-    "playwright": "^1.63.0",
-    "tsx": "^4.23.13",
-    "typescript": "^7.0.2",
-    "vite": "^8.3.0"
+  "description": "Noryum - Intelligent Business Engineering. A local-first workspace for evidence-based career development.",
+  "author": "Noryum",
+  "productName": "Noryum",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dnmmraadev/Noryum.git"
   },
-  "dependencies": {
-    "lucide-react": "^1.45.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
-  },
-  "type": "module"
+  "bugs": {
+    "url": "https://github.com/dnmmraadev/Noryum/issues"
+  }
 }

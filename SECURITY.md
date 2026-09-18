@@ -1,25 +1,17 @@
-# Security
+# Security policy
 
-Noryum is a local-first Windows desktop application. It stores personal records in SQLite under the current Windows user profile and does not require an account, cloud service, API key, or external integration.
+## Supported version
 
-## Supported Version
+Security reports are currently assessed against version 0.2.0. Older releases are retained for reference; no maintenance commitment is made for them.
 
-| Version | Supported |
-| --- | --- |
-| 0.1.x | Yes |
+## Reporting a vulnerability
 
-## Data Handling
+Use the repository's **Security → Report a vulnerability** option when available. Do not publish exploit details, credentials or personal backups in public issues. If private reporting is unavailable, open an issue requesting a private reporting channel without including sensitive details.
 
-- The production app starts with an empty database.
-- Personal data stays on the local machine unless the user manually exports or copies it.
-- Backups created from Settings include personal records and are not encrypted by this MVP.
-- Test and QA databases are excluded from the repository and distribution package.
+Describe the affected version, impact and minimal reproduction steps using synthetic data. There is no guaranteed response or remediation timeline.
 
-## Known Limits
+## Data and boundaries
 
-- Windows binaries are unsigned in this milestone.
-- There is no automatic update channel.
-- Restore is manual.
-- Local SQLite data is not encrypted by the application.
+Noryum stores workspace data locally. JSON backups and local data are not encrypted. External resource links open in the system browser. The renderer is sandboxed, uses context isolation and has no Node.js access; desktop persistence goes through a narrow preload bridge.
 
-Before public distribution, verify installer install/update/uninstall behavior on a clean Windows profile, sign the executable, and define a responsible disclosure contact.
+The Windows release is unsigned and has no automatic updater. Download releases from this repository. Keep backups, and do not import untrusted files containing private or misleading evidence.

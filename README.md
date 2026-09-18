@@ -1,61 +1,70 @@
-# Noryum
+<p align="center">
+  <img src="assets/icon.png" width="120" alt="Noryum icon: a winding silver path leading to a blue horizon">
+</p>
 
-**See the patterns. Shape the outcome.**
+<h1 align="center">Noryum</h1>
+<p align="center"><strong>Intelligent Business Engineering</strong></p>
+<p align="center">Turn your learning into a clear path from skills to project evidence.</p>
+<p align="center"><a href="https://github.com/dnmmraadev/Noryum/releases/tag/v0.2.0">Download v0.2.0</a> · <a href="docs/USER_GUIDE.md">User guide</a> · <a href="https://github.com/dnmmraadev/Noryum/issues">Get help</a></p>
 
-Noryum is a Windows desktop app for routines, wellness, study, intentional leisure, analytics, and weekly review. The interface is in Spanish, the data is stored locally in SQLite, and the app does not require an account. First launch contains no fake records.
+## Build skills with a destination
 
-## Development
+Noryum is an offline Windows workspace that connects **Business Analysis, Data Analytics, Automation and Applied AI** into one visual career roadmap. See what to learn next, practice through projects, and track the evidence behind your progress. English and career skills develop alongside your technical work.
 
-Requirements: Windows x64, Node.js 24, and pnpm. The first dependency install requires a network connection; day-to-day use of the packaged app does not.
+**No account. No subscription. No API key. Your progress stays on your computer.**
 
-```powershell
-pnpm install --frozen-lockfile
-pnpm exec install-electron
-pnpm dev
-```
+## What you can do
 
-`dev` opens Electron with the UI served by Vite. UI changes reload during development; restart the command after changing the main process or preload.
+- **See the whole journey:** explore 92 competencies across seven tracks with prerequisites, search, filters, zoom and a minimap.
+- **Know your next step:** get a study queue based on prerequisites, priorities and your available study time.
+- **Learn by building:** organize five projects with deliverable checklists, notes and evidence links.
+- **Track meaningful progress:** work toward five checkpoints that combine competencies and completed project evidence.
+- **Make it your own:** edit skills, add custom competencies and resources, adjust your study pace, and choose a light or dark theme.
+- **Keep control of your work:** save locally and export or restore a validated JSON backup.
 
-```powershell
-pnpm test
-pnpm build
-pnpm test:ui
-```
+## Download and start
 
-`test` runs domain and storage tests. `build` checks TypeScript and generates `dist/` and `dist-desktop/`. `test:ui` runs the automated desktop flow against the built app; see the validation evidence for the results obtained in this milestone.
+1. Download **Noryum-0.2.0-Windows-x64.zip** from the [v0.2.0 release](https://github.com/dnmmraadev/Noryum/releases/tag/v0.2.0).
+2. Extract the **entire ZIP** into a folder.
+3. Open **Noryum.exe** inside the Noryum folder. Keep its companion files together.
+4. Choose a competency in Roadmap, set its learning state, and use Study plan to continue.
 
-## Windows Distribution
+Requires Windows 10/11 x64. Node.js is not required to run the download. The application is unsigned; Windows may show a publisher warning. Internet access is only needed for optional external learning resources.
 
-The current source version is 0.1.2. Packaging targets `release/Noryum-0.1.2-Setup-x64.exe` through the direct NSIS workflow and a standalone folder at `release/Noryum-win32-x64/`. Version 0.1.2 does not yet include a newly verified installer. To use the folder without installing, open `Noryum.exe` and keep its companion files together. Node and developer tools are not required.
+If you previously used the Career Roadmap build, its local progress directory remains compatible. If upgrading from the older Noryum 0.1.x application, export and keep your old data first: automatic migration from that different application has not been verified. See the [backup and recovery guide](docs/USER_GUIDE.md#local-data-recovery-and-backups).
 
-```powershell
-pnpm package
-```
+## Designed for focused, independent learning
 
-The command builds the app and uses electron-builder to produce a portable executable and an x64 NSIS installer in `release/`. The first packaging run may download helper tools. This milestone does not sign the binaries; publishing with a verified publisher identity requires a signing certificate.
+Noryum is a single-user planning tool. It does not call cloud AI services, collect telemetry, or require paid APIs. Applied AI is a learning track. Competency states are self-assessed, and checkpoint readiness is a planning aid, not a certification or employment guarantee.
 
-Inside the isolated delivery environment, the standalone folder was built with `node scripts/package-portable.mjs` and the installer was built directly with NSIS 3.12. The uninstall manifest is generated with `node scripts/generate-installer.mjs`; then run `makensis scripts/installer.nsi` with NSIS on PATH and `NSISDIR` configured. Uninstall removes only enumerated program files and preserves personal data. `pnpm package:folder` reproduces the standalone folder; the executable icon can be applied with `rcedit --set-icon public/icon.ico`.
-
-## Data And Backups
-
-The database is created at `app.getPath('userData')/noryum.sqlite`, inside the current Windows user profile. Records persist after closing and reopening Noryum. The portable executable also uses that profile; it does not automatically store data next to the `.exe`.
-
-Settings can export a consistent local SQLite backup. Keep backups in a protected location: they include personal records and this MVP does not encrypt them. Do not copy only the main SQLite file while the app is open; use the backup function so pending WAL changes are included.
-
-Restore is still manual. Close Noryum completely and keep a copy of the entire active data folder before replacing files. In the active folder, move `noryum.sqlite` and any `noryum.sqlite-wal` and `noryum.sqlite-shm` files to a safeguard folder; then copy the exported backup as `noryum.sqlite` and reopen Noryum. Do not reuse WAL/SHM files from another database. If startup fails, close the app and restore the original complete set. Use the same or a newer Noryum version than the one that created the backup; a database from a future version is rejected to protect it.
-
-On Windows, the default data folder is under `%APPDATA%\noryum` in this delivery. Tests can set `NORYUM_DATA_DIR` before starting Electron; that option changes the data location and must point to a folder separate from personal information.
-
-No account, remote service, or API key is required. MVP data is used for descriptive summaries only; Noryum does not provide medical diagnosis, a validated wellness measure, or a universal life score.
+Cloud sync, a time tracker, an auto-updater and automatic skills assessment are outside this release. Evidence files are linked, not embedded in backups.
 
 ## Documentation
 
-- [Technical decision and evaluated alternatives](docs/technical-decision.md)
-- [Architecture and maintenance](docs/architecture.md)
-- [Data model and metric definitions](docs/data-model.md)
-- [Product principles and scope](docs/product.md)
-- [Subjective scales: evidence and limits](docs/measurement.md)
-- [Validation results and limits](docs/validation.md)
-- [Release notes 0.1.2](docs/release-0.1.2.md)
-- [Release notes 0.1.0 (historical)](docs/release-0.1.0.md)
-- [Local security and privacy](SECURITY.md)
+| I want to… | Start here |
+| --- | --- |
+| Understand progress, checkpoints and backups | [User guide](docs/USER_GUIDE.md) |
+| Run, test or package the source | [Development guide](docs/DEVELOPMENT.md) |
+| See what changed | [Changelog](CHANGELOG.md) |
+| Report a bug or suggest an improvement | [Contributing](CONTRIBUTING.md) |
+| Understand security reporting | [Security policy](SECURITY.md) |
+| Review the identity and compatibility decisions | [Branding](BRANDING.md) |
+| See completed checks and limitations | [Verification record](VERIFICATION.md) |
+
+## Run from source
+
+Use Node.js 24 LTS and a recent npm on Windows x64:
+
+```sh
+npm ci --legacy-peer-deps
+npm run build
+npm run desktop
+```
+
+For browser development, run `npm run dev` and open `http://127.0.0.1:5173`. Browser preview data is separate from desktop data. See the [development guide](docs/DEVELOPMENT.md) for checks and packaging.
+
+Built with React, TypeScript, React Flow and Electron. Maintained by [dnmmraadev](https://github.com/dnmmraadev).
+
+## License
+
+The existing [Noryum license](LICENSE) applies. Source availability does not grant an open-source license. Third-party components retain their own licenses; the Windows distribution includes Electron's license notices.

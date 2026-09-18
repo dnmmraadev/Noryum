@@ -1,7 +1,17 @@
-import { spawn } from 'node:child_process';
-import { createServer } from 'vite';
-await import('./build.mjs');
-const server=await createServer({configLoader:'native'}); await server.listen();
-const {default:electron}=await import('electron');
-const child=spawn(electron,['.'],{stdio:'inherit',env:{...process.env,NORYUM_DEV_URL:server.resolvedUrls.local[0]}});
-child.on('exit',async(code)=>{await server.close();process.exit(code??0)});
+import { spawn } from "node:child_process";
+import { args, binary } from "./build.mjs";
+const child = spawn(
+  binary,
+  [...args, "--watch=forever", "--servedir=dist", "--serve=127.0.0.1:5173"],
+  { stdio: "inherit" },
+);
+child.on("error", (error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+child.on("exit", (code) => {
+  process.exitCode = code || 0;
+});
+console.log(
+  "Development: http://127.0.0.1:5173. Source changes rebuild automatically; refresh the page to view changes.",
+);
