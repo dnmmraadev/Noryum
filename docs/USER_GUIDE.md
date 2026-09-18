@@ -36,3 +36,9 @@ The app itself makes no cloud or AI calls and includes no telemetry. Linked lear
 ## Current scope
 
 This is a single-user local application. It has no sync, login, publishing service, automatic skills assessment, background scheduler, time tracker or updater. Evidence files are referenced by links/notes, not copied into backups. Custom competencies can be deleted; built-in competencies can be edited or skipped. The full map is intentionally larger than the viewport: use pan, minimap, branch filters and checkpoint paths to focus it.
+
+## Roadmap workspace
+
+The competency details panel stays visible on the Roadmap. Before selecting a competency, it shows mastery progress, the next checkpoint and suggested skills. Clear the selection to return to that overview without changing the map width.
+
+Drag the bar below the map to resize it vertically between 320 and 1400 pixels. Focus the bar and use Up/Down arrows for 40-pixel adjustments, or Home/End for minimum/maximum height. The height is remembered on this device separately from exported roadmap data.

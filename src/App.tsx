@@ -435,7 +435,9 @@ export default function App() {
             </button>
           </div>
         </div>
-        <div className={`workspace ${skill ? "has-detail" : ""}`}>
+        <div
+          className={`workspace ${skill || view === "Roadmap" ? "has-detail" : ""}`}
+        >
           <section className="content">
             {view === "Roadmap" && (
               <>
@@ -1050,13 +1052,53 @@ export default function App() {
               </div>
             )}
           </section>
+          {!skill && view === "Roadmap" && (
+            <aside className="detail" aria-label="Competency details">
+              <span className="eyebrow">COMPETENCY DETAILS</span>
+              <h2>Your next step starts here</h2>
+              <p>
+                Select a competency to explore its learning objective,
+                prerequisites, mastery criteria and practical evidence.
+              </p>
+              <h4>Your roadmap at a glance</h4>
+              <p>
+                {data.skills.filter(mastered).length} of {data.skills.length}{" "}
+                competencies mastered · {total}% complete
+              </p>
+              <Meter value={total} />
+              <p>
+                {doneProjects.length} of {data.projects.length} projects
+                completed with all deliverables.
+              </p>
+              <h4>{next ? "Next checkpoint" : "Checkpoints completed"}</h4>
+              <p>
+                {next
+                  ? next.title
+                  : "You have met every checkpoint. Keep strengthening your portfolio evidence."}
+              </p>
+              <h4>Ready to explore</h4>
+              {study.Now.length ? (
+                list(study.Now, 3)
+              ) : (
+                <p>
+                  No ready competencies remain. Review your study plan or
+                  explore any competency on the map.
+                </p>
+              )}
+              <h4>Make room for your journey</h4>
+              <p>
+                Drag the bar below the map to adjust its height. Pan across the
+                map, scroll to zoom, or use filters to focus on a branch.
+              </p>
+            </aside>
+          )}
           {skill && (
             <aside className="detail" key={skill.id}>
               <div className="spread">
                 <span className="eyebrow">COMPETENCY DETAILS</span>
                 <button
                   className="icon-button"
-                  aria-label="Close details"
+                  aria-label="Clear competency selection"
                   onClick={() => setSelected(null)}
                 >
                   <X size={18} />
