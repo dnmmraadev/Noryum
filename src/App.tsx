@@ -1,3 +1,5 @@
+import { version } from "../package.json";
+import { useTranslation, skillText, projectText } from "./i18n";
 import {
   useEffect,
   useRef,
@@ -72,17 +74,21 @@ function Meter({
   );
 }
 function Field({ title, children }: { title: string; children: ReactNode }) {
+  const { t } = useTranslation();
   const id = useId();
   return (
     <div className="field">
-      <label htmlFor={id}>{title}</label>
-      {isValidElement<{ id?: string }>(children)
-        ? cloneElement(children, { id })
-        : children}
+      <label htmlFor={id}>{t(title)}</label>
+      {t(
+        isValidElement<{ id?: string }>(children)
+          ? cloneElement(children, { id })
+          : children,
+      )}
     </div>
   );
 }
 export default function App() {
+  const { t, language, setLanguage } = useTranslation();
   const [data, setData] = useState<Data | null>(null),
     [view, setView] = useState("Roadmap"),
     [selected, setSelected] = useState<string | null>(null),
@@ -226,17 +232,17 @@ export default function App() {
     return (
       <div className="boot">
         <img src="./icon.png" width={64} height={64} alt="Noryum" />
-        <h1>Noryum</h1>
-        <p>{error || "Opening your workspace…"}</p>
+        <h1>{t("Noryum")}</h1>
+        <p>{t(error || "Opening your workspace…")}</p>
         {error && (
           <button onClick={() => file.current?.click()}>
-            Restore a backup
+            {t(" Restore a backup ")}
           </button>
         )}
-        {importInput}
+        {t(importInput)}
         {confirm && (
           <div className="modal">
-            <p>{confirm.title}</p>
+            <p>{t(confirm.title)}</p>
             <button
               onClick={() => {
                 confirm.action();
@@ -244,7 +250,7 @@ export default function App() {
                 setError("");
               }}
             >
-              Restore
+              {t(" Restore ")}
             </button>
           </div>
         )}
@@ -268,30 +274,36 @@ export default function App() {
           onClick={() => setSelected(s.id)}
         >
           <span className={`status-dot s${statuses.indexOf(s.status)}`}>
-            {mastered(s) ? "✓" : ""}
+            {t(mastered(s) ? "✓" : "")}
           </span>
           <span>
-            <strong>{s.title}</strong>
+            <strong>{skillText(s, s.title, language)}</strong>
             <small>
-              {s.branch} · {s.hours} h
+              {t(s.branch)}
+              {t(" · ")}
+              {t(s.hours)}
+              {t(" h ")}
             </small>
           </span>
           <ChevronRight size={15} />
         </button>
       ))
     ) : (
-      <p className="empty">Nothing here yet.</p>
+      <p className="empty">{t("Nothing here yet.")}</p>
     );
   }
   function branchProgress() {
     return branches.map((b, i) => (
       <div className="branch-progress" key={b}>
-        <span>{b}</span>
+        <span>{t(b)}</span>
         <Meter
           value={progress(data!.skills.filter((s) => s.branch === b))}
           color={colors[i]}
         />
-        <small>{progress(data!.skills.filter((s) => s.branch === b))}%</small>
+        <small>
+          {t(progress(data!.skills.filter((s) => s.branch === b)))}
+          {t("%")}
+        </small>
       </div>
     ));
   }
@@ -303,15 +315,15 @@ export default function App() {
             <img src="./icon.png" width={42} height={42} alt="Noryum icon" />
           </div>
           <div>
-            <b>Noryum</b>
+            <b>{t("Noryum")}</b>
             <small>
-              INTELLIGENT BUSINESS
+              {t(" INTELLIGENT BUSINESS ")}
               <br />
-              ENGINEERING
+              {t(" ENGINEERING ")}
             </small>
           </div>
         </div>
-        <div className="workspace-label">PERSONAL WORKSPACE</div>
+        <div className="workspace-label">{t("PERSONAL WORKSPACE")}</div>
         <nav>
           {nav.map(([name, Icon]) => (
             <button
@@ -323,53 +335,63 @@ export default function App() {
               }}
             >
               <Icon size={19} />
-              {name}
+              <span className="nav-label">{t(name)}</span>
               {view === name && <span className="nav-dot" />}
             </button>
           ))}
         </nav>
         <div className="sidebar-progress">
           <div>
-            <span>Your journey</span>
-            <b>{total}%</b>
+            <span>{t("Your journey")}</span>
+            <b>
+              {t(total)}
+              {t("%")}
+            </b>
           </div>
           <Meter value={total} />
           <small>
-            {data.skills.filter(mastered).length} of {data.skills.length}{" "}
-            competencies mastered
+            {t(data.skills.filter(mastered).length)}
+            {t(" of ")}
+            {t(data.skills.length)}
+            {t(" ")}
+            {t(" competencies mastered ")}
           </small>
           <p>
             <Check size={14} />
-            {doneProjects.length} / 5 projects complete
+            {t(doneProjects.length)}
+            {t(" / 5 projects complete ")}
           </p>
         </div>
         <div className="local">
           <span />
-          Offline workspace<small>{saved}</small>
+          {t(" Offline workspace")}
+          <small>{t(saved)}</small>
+          <small>Noryum {version}</small>
         </div>
       </aside>
       <main>
         <header className="topbar">
           <div className="breadcrumb">
-            Workspace <ChevronRight size={14} /> <b>{view}</b>
+            {t(" Workspace ")}
+            <ChevronRight size={14} /> <b>{t(view)}</b>
           </div>
           <div className="search">
             <Search size={17} />
             <input
               ref={search}
-              aria-label="Search competencies"
-              placeholder="Search competencies…"
+              aria-label={t("Search competencies")}
+              placeholder={t("Search competencies…")}
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
                 setView("Roadmap");
               }}
             />
-            <kbd>Ctrl K</kbd>
+            <kbd>{t("Ctrl K")}</kbd>
           </div>
           <button
             className="icon-button"
-            aria-label="Toggle theme"
+            aria-label={t("Toggle theme")}
             onClick={() =>
               commit({
                 ...data,
@@ -389,26 +411,32 @@ export default function App() {
         </header>
         {error && (
           <div role="alert" className="alert">
-            {error}
-            <button aria-label="Dismiss error" onClick={() => setError("")}>
+            {t(error)}
+            <button
+              aria-label={t("Dismiss error")}
+              onClick={() => setError("")}
+            >
               <X size={16} />
             </button>
           </div>
         )}
         <div className="page-heading">
           <div>
-            <div className="eyebrow">YOUR CAREER, BY DESIGN</div>
-            <h1>{view === "Roadmap" ? "A clearer path forward." : view}</h1>
+            <div className="eyebrow">{t("YOUR CAREER, BY DESIGN")}</div>
+            <h1>{t(view === "Roadmap" ? "A clearer path forward." : view)}</h1>
             <p>
-              {view === "Roadmap"
-                ? "Business Analysis + Data Analytics + Automation + Applied AI"
-                : "Build capability. Create evidence. Move forward with confidence."}
+              {t(
+                view === "Roadmap"
+                  ? "Business Analysis + Data Analytics + Automation + Applied AI"
+                  : "Build capability. Create evidence. Move forward with confidence.",
+              )}
             </p>
           </div>
           <div className="heading-actions">
             <span className="pace">
               <CalendarDays size={15} />
-              {weekly} h / week
+              {t(weekly)}
+              {t(" h / week ")}
             </span>
             <button
               className="primary"
@@ -431,7 +459,7 @@ export default function App() {
               }
             >
               <Plus size={16} />
-              Add competency
+              {t(" Add competency ")}
             </button>
           </div>
         </div>
@@ -444,37 +472,46 @@ export default function App() {
                 <div className="roadmap-toolbar">
                   <div className="track-label">
                     <span className="live-dot" />
-                    Career map <small>{data.skills.length} competencies</small>
+                    {t(" Career map ")}
+                    <small>
+                      {t(data.skills.length)}
+                      {t(" competencies")}
+                    </small>
                   </div>
                   <select
-                    aria-label="Branch filter"
+                    aria-label={t("Branch filter")}
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
                   >
-                    <option value="">All branches</option>
+                    <option value="">{t("All branches")}</option>
                     {branches.map((b) => (
-                      <option key={b}>{b}</option>
+                      <option key={b} value={b}>
+                        {t(b)}
+                      </option>
                     ))}
                   </select>
                   <select
-                    aria-label="Status filter"
+                    aria-label={t("Status filter")}
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                   >
-                    <option value="">All states</option>
+                    <option value="">{t("All states")}</option>
                     {statuses.map((s) => (
-                      <option key={s}>{s}</option>
+                      <option key={s} value={s}>
+                        {t(s)}
+                      </option>
                     ))}
                   </select>
                   <select
-                    aria-label="Checkpoint path"
+                    aria-label={t("Checkpoint path")}
                     value={checkpoint}
                     onChange={(e) => setCheckpoint(e.target.value)}
                   >
-                    <option value="">Full roadmap</option>
+                    <option value="">{t("Full roadmap")}</option>
                     {checkpoints.map((c, i) => (
                       <option value={c.id} key={c.id}>
-                        Path to checkpoint {i + 1}
+                        {t(" Path to checkpoint ")}
+                        {t(i + 1)}
                       </option>
                     ))}
                   </select>
@@ -487,7 +524,7 @@ export default function App() {
                         setCheckpoint("");
                       }}
                     >
-                      Clear
+                      {t(" Clear ")}
                     </button>
                   )}
                 </div>
@@ -504,42 +541,47 @@ export default function App() {
                   {statuses.map((s, i) => (
                     <span key={s}>
                       <i className={`status-dot s${i}`} />
-                      {s}
+                      {t(s)}
                     </span>
                   ))}
-                  <span>◇ Project evidence</span>
+                  <span>{t("◇ Project evidence")}</span>
                 </div>
                 <div className="bottom-grid">
                   <article className="card">
-                    <h3>Progress by branch</h3>
-                    {branchProgress()}
+                    <h3>{t("Progress by branch")}</h3>
+                    {t(branchProgress())}
                   </article>
                   <article className="card next-card">
-                    <div className="eyebrow">NEXT CAREER CHECKPOINT</div>
-                    <h2>{next?.title || "All checkpoints complete"}</h2>
-                    <p>Turn your learning into professional evidence.</p>
+                    <div className="eyebrow">{t("NEXT CAREER CHECKPOINT")}</div>
+                    <h2>{t(next?.title || "All checkpoints complete")}</h2>
+                    <p>{t("Turn your learning into professional evidence.")}</p>
                     <Meter value={nextState?.percent ?? 100} color="#46c798" />
                     <div className="spread">
                       <small>
-                        {nextState?.missing.length || 0} competencies remaining
+                        {t(nextState?.missing.length || 0)}
+                        {t(" competencies remaining ")}
                       </small>
-                      <b>{nextState?.percent ?? 100}%</b>
+                      <b>
+                        {t(nextState?.percent ?? 100)}
+                        {t("%")}
+                      </b>
                     </div>
                     <button onClick={() => setView("Employability")}>
-                      Explore checkpoint <ArrowUpRight size={15} />
+                      {t(" Explore checkpoint ")}
+                      <ArrowUpRight size={15} />
                     </button>
                   </article>
                   <article className="card">
                     <div className="spread">
-                      <h3>Ready to learn</h3>
+                      <h3>{t("Ready to learn")}</h3>
                       <button
                         className="text-button"
                         onClick={() => setView("Study plan")}
                       >
-                        View plan →
+                        {t(" View plan → ")}
                       </button>
                     </div>
-                    {list(study.Now, 3)}
+                    {t(list(study.Now, 3))}
                   </article>
                 </div>
               </>
@@ -557,74 +599,85 @@ export default function App() {
                     [`${doneProjects.length} / 5`, "Completed projects"],
                   ].map(([v, l]) => (
                     <article className="card stat" key={l}>
-                      <small>{l}</small>
-                      <strong>{v}</strong>
+                      <small>{t(l)}</small>
+                      <strong>{t(v)}</strong>
                     </article>
                   ))}
                 </div>
                 <div className="two-grid">
                   <article className="card">
-                    <h3>Progress by branch</h3>
-                    {branchProgress()}
+                    <h3>{t("Progress by branch")}</h3>
+                    {t(branchProgress())}
                     <p className="muted">
-                      Skipped competencies do not count as mastery.
+                      {t(" Skipped competencies do not count as mastery. ")}
                     </p>
                   </article>
                   <article className="card">
-                    <h3>Career readiness</h3>
+                    <h3>{t("Career readiness")}</h3>
                     <p>
-                      Current:{" "}
-                      {checkpoints
-                        .filter((c) => readiness(c, data).percent === 100)
-                        .at(-1)?.title || "Building foundations"}
+                      {t(" Current:")}
+                      {t(" ")}
+                      {t(
+                        checkpoints
+                          .filter((c) => readiness(c, data).percent === 100)
+                          .at(-1)?.title || "Building foundations",
+                      )}
                     </p>
-                    <h2>{next?.title || "All checkpoints complete"}</h2>
+                    <h2>{t(next?.title || "All checkpoints complete")}</h2>
                     <p>
-                      {nextState?.weeks || 0} weeks of competency work at your
-                      current pace, plus project delivery.
+                      {t(nextState?.weeks || 0)}
+                      {t(
+                        " weeks of competency work at your current pace, plus project delivery. ",
+                      )}
                     </p>
                     <Meter value={nextState?.percent ?? 100} />
                     <button onClick={() => setView("Employability")}>
-                      Review readiness <ArrowUpRight size={16} />
+                      {t(" Review readiness ")}
+                      <ArrowUpRight size={16} />
                     </button>
                   </article>
                   <article className="card">
-                    <h3>Competency states</h3>
+                    <h3>{t("Competency states")}</h3>
                     {statuses.map((s) => (
                       <div className="spread row" key={s}>
-                        <span>{s}</span>
+                        <span>{t(s)}</span>
                         <b>
-                          {data.skills.filter((x) => x.status === s).length}
+                          {t(data.skills.filter((x) => x.status === s).length)}
                         </b>
                       </div>
                     ))}
                   </article>
                   <article className="card">
-                    <h3>Recent activity</h3>
+                    <h3>{t("Recent activity")}</h3>
                     {data.activity.length ? (
                       data.activity.slice(0, 8).map((a, i) => (
                         <div className="activity" key={i}>
                           <Check size={16} />
                           <span>
-                            {a.text}
+                            {t(a.text)}
                             <small>
-                              {new Date(a.date).toLocaleString("en-US")}
+                              {t(
+                                new Date(a.date).toLocaleString(
+                                  language === "en" ? "en-US" : "es-MX",
+                                ),
+                              )}
                             </small>
                           </span>
                         </div>
                       ))
                     ) : (
                       <p className="empty">
-                        Your first step starts here. Update a competency to
-                        begin.
+                        {t(
+                          " Your first step starts here. Update a competency to begin. ",
+                        )}
                       </p>
                     )}
                   </article>
                 </div>
                 <article className="card">
-                  <h3>Needed for your next checkpoint</h3>
+                  <h3>{t("Needed for your next checkpoint")}</h3>
                   <div className="three-grid">
-                    {list(nextState?.missing || [])}
+                    {t(list(nextState?.missing || []))}
                   </div>
                 </article>
               </>
@@ -632,27 +685,31 @@ export default function App() {
             {view === "Study plan" && (
               <>
                 <div className="notice">
-                  Suggestions use prerequisite readiness and priority. English
-                  can advance independently. Skipped prerequisites allow
-                  exploration; they do not establish mastery.
+                  {t(
+                    " Suggestions use prerequisite readiness and priority. English can advance independently. Skipped prerequisites allow exploration; they do not establish mastery. ",
+                  )}
                 </div>
                 <div className="three-grid plan">
                   {Object.entries(study).map(([label, items], i) => (
                     <article className="card" key={label}>
-                      <div className="eyebrow">0{i + 1} / STUDY QUEUE</div>
+                      <div className="eyebrow">
+                        {t("0")}
+                        {t(i + 1)}
+                        {t(" / STUDY QUEUE")}
+                      </div>
                       <h2>
-                        {label} <small>{items.length}</small>
+                        {t(label)} <small>{t(items.length)}</small>
                       </h2>
                       <p>
-                        {
+                        {t(
                           [
                             "Prerequisites resolved. Start or continue here.",
                             "One learning layer away.",
                             "Build toward these longer-term capabilities.",
-                          ][i]
-                        }
+                          ][i],
+                        )}
                       </p>
-                      {list(items)}
+                      {t(list(items))}
                     </article>
                   ))}
                 </div>
@@ -661,49 +718,69 @@ export default function App() {
             {view === "Employability" && (
               <>
                 <div className="notice">
-                  Readiness measures evidence against this roadmap, not a
-                  guarantee of employment. Initial timelines assume 45 study
-                  hours per week and are estimates.
+                  {t(
+                    " Readiness measures evidence against this roadmap, not a guarantee of employment. Initial timelines assume 45 study hours per week and are estimates. ",
+                  )}
                 </div>
                 {checkpoints.map((c, i) => {
                   const r = readiness(c, data);
                   return (
                     <article className="card checkpoint-card" key={c.id}>
-                      <div className="checkpoint-number">0{i + 1}</div>
+                      <div className="checkpoint-number">
+                        {t("0")}
+                        {t(i + 1)}
+                      </div>
                       <div className="checkpoint-body">
                         <div className="spread">
-                          <h2>{c.title}</h2>
+                          <h2>{t(c.title)}</h2>
                           <span
                             className={`badge ${r.percent === 100 ? "green" : ""}`}
                           >
-                            {r.percent === 100
-                              ? "Ready"
-                              : r.percent >= 75
-                                ? "Close"
-                                : "Not ready"}{" "}
-                            · {r.percent}%
+                            {t(
+                              r.percent === 100
+                                ? "Ready"
+                                : r.percent >= 75
+                                  ? "Close"
+                                  : "Not ready",
+                            )}
+                            {t(" ")}
+                            {t(" · ")}
+                            {t(r.percent)}
+                            {t("% ")}
                           </span>
                         </div>
-                        <p>{c.roles.join(" · ")}</p>
+                        <p>{c.roles.map((role) => t(role)).join(" · ")}</p>
                         <Meter value={r.percent} color={colors[i + 1]} />
                         <div className="checkpoint-metrics">
                           <span>
-                            Initial cumulative estimate: <b>{c.weeks} weeks</b>
+                            {t(" Initial cumulative estimate: ")}
+                            <b>
+                              {t(c.weeks)}
+                              {t(" weeks")}
+                            </b>
                           </span>
                           <span>
-                            Remaining competency work: <b>~{r.weeks} weeks</b>
+                            {t(" Remaining competency work: ")}
+                            <b>
+                              {t("~")}
+                              {t(r.weeks)}
+                              {t(" weeks")}
+                            </b>
                           </span>
                           <span>
                             <b>
-                              {r.skills.length - r.missing.length}/
-                              {r.skills.length}
-                            </b>{" "}
-                            mastered
+                              {t(r.skills.length - r.missing.length)}
+                              {t("/ ")}
+                              {t(r.skills.length)}
+                            </b>
+                            {t(" ")}
+                            {t(" mastered ")}
                           </span>
                         </div>
                         <p className="muted">
-                          Remaining time excludes additional project delivery
-                          and interviews. Adjust your pace in Settings.
+                          {t(
+                            " Remaining time excludes additional project delivery and interviews. Adjust your pace in Settings. ",
+                          )}
                         </p>
                         <div className="chips">
                           {c.projects.map((id) => {
@@ -713,16 +790,19 @@ export default function App() {
                                 key={id}
                                 onClick={() => setView("Projects")}
                               >
-                                {doneProjects.includes(p) ? "✓" : "◇"} {p.title}
+                                {t(doneProjects.includes(p) ? "✓" : "◇")}{" "}
+                                {projectText(p, p.title, language)}
                               </button>
                             );
                           })}
                         </div>
                         <details>
                           <summary>
-                            Review {r.missing.length} missing competencies
+                            {t(" Review ")}
+                            {t(r.missing.length)}
+                            {t(" missing competencies ")}
                           </summary>
-                          <div className="three-grid">{list(r.missing)}</div>
+                          <div className="three-grid">{t(list(r.missing))}</div>
                         </details>
                         <button
                           className="text-button"
@@ -734,7 +814,7 @@ export default function App() {
                             setView("Roadmap");
                           }}
                         >
-                          Show this path on the map →
+                          {t(" Show this path on the map → ")}
                         </button>
                       </div>
                     </article>
@@ -747,10 +827,12 @@ export default function App() {
                 {data.projects.map((p, i) => (
                   <article className="card project-card" key={p.id}>
                     <div className="eyebrow">
-                      PROJECT 0{i + 1} / PRACTICAL EVIDENCE
+                      {t(" PROJECT 0")}
+                      {t(i + 1)}
+                      {t(" / PRACTICAL EVIDENCE ")}
                     </div>
-                    <h2>{p.title}</h2>
-                    <Field title="Project status">
+                    <h2>{projectText(p, p.title, language)}</h2>
+                    <Field title={t("Project status")}>
                       <select
                         value={p.status}
                         onChange={(e) =>
@@ -760,11 +842,13 @@ export default function App() {
                         }
                       >
                         {statuses.map((s) => (
-                          <option key={s}>{s}</option>
+                          <option key={s} value={s}>
+                            {t(s)}
+                          </option>
                         ))}
                       </select>
                     </Field>
-                    <h4>Deliverables</h4>
+                    <h4>{t("Deliverables")}</h4>
                     {p.deliverables.map((d, j) => (
                       <label className="check-row" key={d.title}>
                         <input
@@ -778,18 +862,19 @@ export default function App() {
                             })
                           }
                         />
-                        {d.title}
+                        {projectText(p, d.title, language)}
                       </label>
                     ))}
                     {p.status === "Competent" &&
                       !p.deliverables.every((d) => d.done) && (
                         <p className="warning">
-                          Complete every deliverable to count this project
-                          toward a checkpoint.
+                          {t(
+                            " Complete every deliverable to count this project toward a checkpoint. ",
+                          )}
                         </p>
                       )}
                     <div className="two-grid">
-                      <Field title="Start date">
+                      <Field title={t("Start date")}>
                         <input
                           type="date"
                           value={p.start}
@@ -799,7 +884,7 @@ export default function App() {
                           }
                         />
                       </Field>
-                      <Field title="Completion date">
+                      <Field title={t("Completion date")}>
                         <input
                           type="date"
                           value={p.end}
@@ -810,25 +895,27 @@ export default function App() {
                         />
                       </Field>
                     </div>
-                    <Field title="GitHub URL">
+                    <Field title={t("GitHub URL")}>
                       <input
-                        placeholder="https://github.com/…"
+                        placeholder={t("https://github.com/…")}
                         value={p.github}
                         onChange={(e) =>
                           updateProject(p.id, { github: e.target.value })
                         }
                       />
                     </Field>
-                    <Field title="Evidence links (one per line)">
+                    <Field title={t("Evidence links (one per line)")}>
                       <textarea
                         value={p.links}
-                        placeholder="Documents, dashboards, automation demos, case studies…"
+                        placeholder={t(
+                          "Documents, dashboards, automation demos, case studies…",
+                        )}
                         onChange={(e) =>
                           updateProject(p.id, { links: e.target.value })
                         }
                       />
                     </Field>
-                    <Field title="Project notes">
+                    <Field title={t("Project notes")}>
                       <textarea
                         value={p.notes}
                         onChange={(e) =>
@@ -837,7 +924,8 @@ export default function App() {
                       />
                     </Field>
                     <button onClick={() => setSelected(p.requirements[0])}>
-                      View linked competency <ChevronRight size={16} />
+                      {t(" View linked competency ")}
+                      <ChevronRight size={16} />
                     </button>
                   </article>
                 ))}
@@ -846,26 +934,33 @@ export default function App() {
             {view === "Portfolio" && (
               <>
                 <div className="notice">
-                  Your local evidence library: BA documents, dashboards,
-                  repositories, automations and case studies. Add evidence links
-                  and notes in Projects.
+                  {t(
+                    " Your local evidence library: BA documents, dashboards, repositories, automations and case studies. Add evidence links and notes in Projects. ",
+                  )}
                 </div>
                 <div className="project-grid">
                   {data.projects.map((p, i) => (
                     <article className="card" key={p.id}>
                       <div className="eyebrow">
-                        EVIDENCE COLLECTION 0{i + 1}
+                        {t(" EVIDENCE COLLECTION 0")}
+                        {t(i + 1)}
                       </div>
-                      <h2>{p.title}</h2>
-                      <span className="badge">{p.status}</span>
+                      <h2>{projectText(p, p.title, language)}</h2>
+                      <span className="badge">{t(p.status)}</span>
                       <p>
-                        {p.deliverables.filter((d) => d.done).length} /{" "}
-                        {p.deliverables.length} deliverables recorded
+                        {t(p.deliverables.filter((d) => d.done).length)}
+                        {t(" /")}
+                        {t(" ")}
+                        {t(p.deliverables.length)}
+                        {t(" deliverables recorded ")}
                       </p>
                       {p.deliverables
                         .filter((d) => d.done)
                         .map((d) => (
-                          <p key={d.title}>✓ {d.title}</p>
+                          <p key={d.title}>
+                            {t("✓ ")}
+                            {projectText(p, d.title, language)}
+                          </p>
                         ))}
                       {[p.github, ...p.links.split("\n")]
                         .filter((x) => /^https?:\/\//.test(x))
@@ -877,15 +972,15 @@ export default function App() {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            {url}
+                            {t(url)}
                             <ArrowUpRight size={16} />
                           </a>
                         ))}
                       <p className="notes">
-                        {p.notes || "No evidence notes yet."}
+                        {p.notes || t("No evidence notes yet.")}
                       </p>
                       <button onClick={() => setView("Projects")}>
-                        Manage evidence
+                        {t(" Manage evidence ")}
                       </button>
                     </article>
                   ))}
@@ -895,15 +990,14 @@ export default function App() {
             {view === "Resources" && (
               <>
                 <div className="notice">
-                  Free reference material, optional to open. Every competency
-                  can be studied and tracked offline. Vendor tools may have
-                  separate licensing; local and mock implementations are valid
-                  evidence.
+                  {t(
+                    " Free reference material, optional to open. Every competency can be studied and tracked offline. Vendor tools may have separate licensing; local and mock implementations are valid evidence. ",
+                  )}
                 </div>
                 <div className="three-grid">
                   {branches.map((b, i) => (
                     <article className="card" key={b}>
-                      <h3 style={{ color: colors[i] }}>{b}</h3>
+                      <h3 style={{ color: colors[i] }}>{t(b)}</h3>
                       {data.skills
                         .filter((s) => s.branch === b)
                         .map((s) => (
@@ -912,7 +1006,7 @@ export default function App() {
                               className="text-button"
                               onClick={() => setSelected(s.id)}
                             >
-                              {s.title}
+                              {skillText(s, s.title, language)}
                             </button>
                             {s.resources.map((r, j) => (
                               <a
@@ -921,7 +1015,8 @@ export default function App() {
                                 target="_blank"
                                 rel="noreferrer"
                               >
-                                {r.title} ↗
+                                {skillText(s, r.title, language)}
+                                {t(" ↗ ")}
                               </a>
                             ))}
                           </div>
@@ -934,12 +1029,30 @@ export default function App() {
             {view === "Settings" && (
               <div className="settings-grid">
                 <article className="card">
-                  <h2>Your study rhythm</h2>
+                  <h2>{t("Language")}</h2>
+                  <Field title={t("Interface language")}>
+                    <select
+                      value={language}
+                      onChange={(event) =>
+                        setLanguage(event.target.value as "en" | "es-419")
+                      }
+                    >
+                      <option value="en">English</option>
+                      <option value="es-419">Español (Latinoamérica)</option>
+                    </select>
+                  </Field>
                   <p>
-                    Estimates adapt to your available time. Progress is based on
-                    mastery.
+                    {t(
+                      "Choose the language for the interface and built-in learning content. Your notes, links and custom content stay as written.",
+                    )}
                   </p>
-                  <Field title="Hours per day">
+                  <h2>{t("Your study rhythm")}</h2>
+                  <p>
+                    {t(
+                      " Estimates adapt to your available time. Progress is based on mastery. ",
+                    )}
+                  </p>
+                  <Field title={t("Hours per day")}>
                     <input
                       type="number"
                       min="0.5"
@@ -956,7 +1069,7 @@ export default function App() {
                       }}
                     />
                   </Field>
-                  <Field title="Days per week">
+                  <Field title={t("Days per week")}>
                     <input
                       type="number"
                       min="1"
@@ -972,12 +1085,16 @@ export default function App() {
                       }}
                     />
                   </Field>
-                  <h2>{weekly} hours / week</h2>
+                  <h2>
+                    {t(weekly)}
+                    {t(" hours / week")}
+                  </h2>
                   <p>
-                    ~{Math.ceil(remaining(data.skills) / weekly)} weeks of
-                    remaining competency work.
+                    {t(" ~")}
+                    {t(Math.ceil(remaining(data.skills) / weekly))}
+                    {t(" weeks of remaining competency work. ")}
                   </p>
-                  <Field title="Appearance">
+                  <Field title={t("Appearance")}>
                     <select
                       value={data.settings.theme}
                       onChange={(e) =>
@@ -990,25 +1107,26 @@ export default function App() {
                         })
                       }
                     >
-                      <option value="dark">Dark</option>
-                      <option value="light">Light</option>
+                      <option value="dark">{t("Dark")}</option>
+                      <option value="light">{t("Light")}</option>
                     </select>
                   </Field>
                 </article>
                 <article className="card">
-                  <h2>Your data stays yours</h2>
+                  <h2>{t("Your data stays yours")}</h2>
                   <p>
-                    Everything is stored on this device. Export a readable JSON
-                    backup to move your complete workspace between computers.
+                    {t(
+                      " Everything is stored on this device. Export a readable JSON backup to move your complete workspace between computers. ",
+                    )}
                   </p>
                   <div className="button-stack">
                     <button onClick={() => exportData(data)}>
                       <Download size={17} />
-                      Export complete backup
+                      {t(" Export complete backup ")}
                     </button>
                     <button onClick={() => file.current?.click()}>
                       <Upload size={17} />
-                      Import backup
+                      {t(" Import backup ")}
                     </button>
                     <button
                       className="danger"
@@ -1042,87 +1160,103 @@ export default function App() {
                       }
                     >
                       <RotateCcw size={17} />
-                      Reset progress
+                      {t(" Reset progress ")}
                     </button>
                   </div>
                   <p className="muted">
-                    No account. No cloud dependency. No telemetry.
+                    {t(" No account. No cloud dependency. No telemetry. ")}
                   </p>
                 </article>
               </div>
             )}
           </section>
           {!skill && view === "Roadmap" && (
-            <aside className="detail" aria-label="Competency details">
-              <span className="eyebrow">COMPETENCY DETAILS</span>
-              <h2>Your next step starts here</h2>
+            <aside className="detail" aria-label={t("Competency details")}>
+              <span className="eyebrow">{t("COMPETENCY DETAILS")}</span>
+              <h2>{t("Your next step starts here")}</h2>
               <p>
-                Select a competency to explore its learning objective,
-                prerequisites, mastery criteria and practical evidence.
+                {t(
+                  " Select a competency to explore its learning objective, prerequisites, mastery criteria and practical evidence. ",
+                )}
               </p>
-              <h4>Your roadmap at a glance</h4>
+              <h4>{t("Your roadmap at a glance")}</h4>
               <p>
-                {data.skills.filter(mastered).length} of {data.skills.length}{" "}
-                competencies mastered · {total}% complete
+                {t(data.skills.filter(mastered).length)}
+                {t(" of ")}
+                {t(data.skills.length)}
+                {t(" ")}
+                {t(" competencies mastered · ")}
+                {t(total)}
+                {t("% complete ")}
               </p>
               <Meter value={total} />
               <p>
-                {doneProjects.length} of {data.projects.length} projects
-                completed with all deliverables.
+                {t(doneProjects.length)}
+                {t(" of ")}
+                {t(data.projects.length)}
+                {t(" projects completed with all deliverables. ")}
               </p>
-              <h4>{next ? "Next checkpoint" : "Checkpoints completed"}</h4>
+              <h4>{t(next ? "Next checkpoint" : "Checkpoints completed")}</h4>
               <p>
-                {next
-                  ? next.title
-                  : "You have met every checkpoint. Keep strengthening your portfolio evidence."}
+                {t(
+                  next
+                    ? next.title
+                    : "You have met every checkpoint. Keep strengthening your portfolio evidence.",
+                )}
               </p>
-              <h4>Ready to explore</h4>
+              <h4>{t("Ready to explore")}</h4>
               {study.Now.length ? (
                 list(study.Now, 3)
               ) : (
                 <p>
-                  No ready competencies remain. Review your study plan or
-                  explore any competency on the map.
+                  {t(
+                    " No ready competencies remain. Review your study plan or explore any competency on the map. ",
+                  )}
                 </p>
               )}
-              <h4>Make room for your journey</h4>
+              <h4>{t("Make room for your journey")}</h4>
               <p>
-                Drag the bar below the map to adjust its height. Pan across the
-                map, scroll to zoom, or use filters to focus on a branch.
+                {t(
+                  " Drag the bar below the map to adjust its height. Pan across the map, scroll to zoom, or use filters to focus on a branch. ",
+                )}
               </p>
             </aside>
           )}
           {skill && (
             <aside className="detail" key={skill.id}>
               <div className="spread">
-                <span className="eyebrow">COMPETENCY DETAILS</span>
+                <span className="eyebrow">{t("COMPETENCY DETAILS")}</span>
                 <button
                   className="icon-button"
-                  aria-label="Clear competency selection"
+                  aria-label={t("Clear competency selection")}
                   onClick={() => setSelected(null)}
                 >
                   <X size={18} />
                 </button>
               </div>
-              <h2>{skill.title}</h2>
+              <h2>{skillText(skill, skill.title, language)}</h2>
               <div className="chips">
                 <span
                   className="badge"
                   style={{ color: colors[branches.indexOf(skill.branch)] }}
                 >
-                  {skill.branch}
+                  {t(skill.branch)}
                 </span>
-                <span className="badge">{skill.priority} priority</span>
+                <span className="badge">
+                  {t(skill.priority)}
+                  {t(" priority")}
+                </span>
               </div>
               {!unlocked(skill, data.skills) && (
                 <p className="warning">
-                  Prerequisites are pending. You can still explore and record
-                  progress.
+                  {t(
+                    " Prerequisites are pending. You can still explore and record progress. ",
+                  )}
                 </p>
               )}
-              <Field title="Learning status">
+              <Field title={t("Learning status")}>
                 <select
-                  aria-label="Learning status"
+                  aria-label={t("Learning status")}
                   value={skill.status}
                   onChange={(e) =>
                     updateSkill(skill.id, {
@@ -1131,12 +1265,14 @@ export default function App() {
                   }
                 >
                   {statuses.map((s) => (
-                    <option key={s}>{s}</option>
+                    <option key={s} value={s}>
+                      {t(s)}
+                    </option>
                   ))}
                 </select>
               </Field>
               <div className="two-grid">
-                <Field title="Estimated hours">
+                <Field title={t("Estimated hours")}>
                   <input
                     type="number"
                     min="0.5"
@@ -1150,7 +1286,7 @@ export default function App() {
                     }}
                   />
                 </Field>
-                <Field title="Priority">
+                <Field title={t("Priority")}>
                   <select
                     value={skill.priority}
                     onChange={(e) =>
@@ -1160,14 +1296,16 @@ export default function App() {
                     }
                   >
                     {["High", "Medium", "Low"].map((p) => (
-                      <option key={p}>{p}</option>
+                      <option key={p} value={p}>
+                        {t(p)}
+                      </option>
                     ))}
                   </select>
                 </Field>
               </div>
-              <h4>Learning objective</h4>
-              <p>{skill.objective}</p>
-              <h4>Prerequisites</h4>
+              <h4>{t("Learning objective")}</h4>
+              <p>{skillText(skill, skill.objective, language)}</p>
+              <h4>{t("Prerequisites")}</h4>
               {skill.prerequisites.length ? (
                 skill.prerequisites.map((id) => (
                   <button
@@ -1175,17 +1313,24 @@ export default function App() {
                     key={id}
                     onClick={() => setSelected(id)}
                   >
-                    {data.skills.find((s) => s.id === id)?.status ===
-                    "Competent"
-                      ? "✓"
-                      : "○"}{" "}
-                    {data.skills.find((s) => s.id === id)?.title}
+                    {t(
+                      data.skills.find((s) => s.id === id)?.status ===
+                        "Competent"
+                        ? "✓"
+                        : "○",
+                    )}
+                    {t(" ")}
+                    {skillText(
+                      data.skills.find((s) => s.id === id),
+                      data.skills.find((s) => s.id === id)?.title,
+                      language,
+                    )}
                   </button>
                 ))
               ) : (
-                <p className="muted">Independent starting point</p>
+                <p className="muted">{t("Independent starting point")}</p>
               )}
-              <h4>Unlocks</h4>
+              <h4>{t("Unlocks")}</h4>
               {data.skills
                 .filter((s) => s.prerequisites.includes(skill.id))
                 .map((s) => (
@@ -1194,17 +1339,18 @@ export default function App() {
                     key={s.id}
                     onClick={() => setSelected(s.id)}
                   >
-                    {s.title} →
+                    {skillText(s, s.title, language)}
+                    {t(" → ")}
                   </button>
                 ))}
-              <h4>Mastery criteria</h4>
+              <h4>{t("Mastery criteria")}</h4>
               <ul>
                 {skill.criteria.map((c, i) => (
-                  <li key={i}>{c}</li>
+                  <li key={i}>{skillText(skill, c, language)}</li>
                 ))}
               </ul>
-              <h4>Practical evidence</h4>
-              <p>{skill.evidence}</p>
+              <h4>{t("Practical evidence")}</h4>
+              <p>{skillText(skill, skill.evidence, language)}</p>
               {skill.projectId && (
                 <button
                   onClick={() => {
@@ -1212,17 +1358,19 @@ export default function App() {
                     setSelected(null);
                   }}
                 >
-                  Open related project <ChevronRight size={16} />
+                  {t(" Open related project ")}
+                  <ChevronRight size={16} />
                 </button>
               )}
-              <h4>Free resources</h4>
+              <h4>{t("Free resources")}</h4>
               {skill.resources.map((r, i) => (
                 <div className="resource" key={i}>
                   <a href={r.url} target="_blank" rel="noreferrer">
-                    {r.title} ↗
+                    {skillText(skill, r.title, language)}
+                    {t(" ↗ ")}
                   </a>
                   <button
-                    aria-label={`Remove ${r.title}`}
+                    aria-label={t(`Remove ${r.title}`)}
                     onClick={() =>
                       setConfirm({
                         title: "Remove this resource?",
@@ -1246,10 +1394,12 @@ export default function App() {
                   })
                 }
               />
-              <Field title="Personal notes">
+              <Field title={t("Personal notes")}>
                 <textarea
                   rows={5}
-                  placeholder="Capture what you learned, evidence and questions…"
+                  placeholder={t(
+                    "Capture what you learned, evidence and questions…",
+                  )}
                   value={skill.notes}
                   onChange={(e) =>
                     updateSkill(skill.id, { notes: e.target.value })
@@ -1257,7 +1407,7 @@ export default function App() {
                 />
               </Field>
               <button onClick={() => setEditor(structuredClone(skill))}>
-                Edit competency & resources
+                {t(" Edit competency & resources ")}
               </button>
               {skill.custom && (
                 <button
@@ -1289,26 +1439,26 @@ export default function App() {
                     })
                   }
                 >
-                  Delete custom competency
+                  {t(" Delete custom competency ")}
                 </button>
               )}
             </aside>
           )}
         </div>
       </main>
-      {importInput}
+      {t(importInput)}
       {confirm && (
         <div className="overlay">
           <div
             className="modal"
             role="dialog"
             aria-modal="true"
-            aria-label="Confirm change"
+            aria-label={t("Confirm change")}
           >
-            <h2>Confirm change</h2>
-            <p>{confirm.title}</p>
+            <h2>{t("Confirm change")}</h2>
+            <p>{t(confirm.title)}</p>
             <div className="modal-actions">
-              <button onClick={() => setConfirm(null)}>Cancel</button>
+              <button onClick={() => setConfirm(null)}>{t("Cancel")}</button>
               <button
                 className="primary"
                 onClick={() => {
@@ -1316,7 +1466,7 @@ export default function App() {
                   setConfirm(null);
                 }}
               >
-                Confirm
+                {t(" Confirm ")}
               </button>
             </div>
           </div>
@@ -1346,29 +1496,31 @@ export default function App() {
           >
             <div className="spread">
               <h2>
-                {data.skills.some((s) => s.id === editor.id)
-                  ? "Edit competency"
-                  : "Add competency"}
+                {t(
+                  data.skills.some((s) => s.id === editor.id)
+                    ? "Edit competency"
+                    : "Add competency",
+                )}
               </h2>
               <button
                 type="button"
-                aria-label="Close editor"
+                aria-label={t("Close editor")}
                 onClick={() => setEditor(null)}
               >
                 <X size={17} />
               </button>
             </div>
-            <Field title="Title">
+            <Field title={t("Title")}>
               <input
                 required
                 maxLength={200}
-                value={editor.title}
+                value={skillText(editor, editor.title, language)}
                 onChange={(e) =>
                   setEditor({ ...editor, title: e.target.value })
                 }
               />
             </Field>
-            <Field title="Branch">
+            <Field title={t("Branch")}>
               <select
                 value={editor.branch}
                 onChange={(e) =>
@@ -1379,38 +1531,42 @@ export default function App() {
                 }
               >
                 {branches.map((b) => (
-                  <option key={b}>{b}</option>
+                  <option key={b} value={b}>
+                    {t(b)}
+                  </option>
                 ))}
               </select>
             </Field>
-            <Field title="Learning objective">
+            <Field title={t("Learning objective")}>
               <textarea
                 required
-                value={editor.objective}
+                value={skillText(editor, editor.objective, language)}
                 onChange={(e) =>
                   setEditor({ ...editor, objective: e.target.value })
                 }
               />
             </Field>
-            <Field title="Mastery criteria (one per line)">
+            <Field title={t("Mastery criteria (one per line)")}>
               <textarea
                 required
-                value={editor.criteria.join("\n")}
+                value={editor.criteria
+                  .map((item) => skillText(editor, item, language))
+                  .join("\n")}
                 onChange={(e) =>
                   setEditor({ ...editor, criteria: e.target.value.split("\n") })
                 }
               />
             </Field>
-            <Field title="Practical evidence">
+            <Field title={t("Practical evidence")}>
               <textarea
                 required
-                value={editor.evidence}
+                value={skillText(editor, editor.evidence, language)}
                 onChange={(e) =>
                   setEditor({ ...editor, evidence: e.target.value })
                 }
               />
             </Field>
-            <Field title="Prerequisites (Ctrl-click to select multiple)">
+            <Field title={t("Prerequisites (Ctrl-click to select multiple)")}>
               <select
                 multiple
                 value={editor.prerequisites}
@@ -1428,18 +1584,18 @@ export default function App() {
                   .filter((s) => s.id !== editor.id)
                   .map((s) => (
                     <option value={s.id} key={s.id}>
-                      {s.title}
+                      {skillText(s, s.title, language)}
                     </option>
                   ))}
               </select>
             </Field>
-            <h4>Resources</h4>
+            <h4>{t("Resources")}</h4>
             {editor.resources.map((r, i) => (
               <div className="two-grid" key={i}>
-                <Field title="Resource title">
+                <Field title={t("Resource title")}>
                   <input
                     required
-                    value={r.title}
+                    value={skillText(editor, r.title, language)}
                     onChange={(e) =>
                       setEditor({
                         ...editor,
@@ -1450,7 +1606,7 @@ export default function App() {
                     }
                   />
                 </Field>
-                <Field title="Resource URL">
+                <Field title={t("Resource URL")}>
                   <input
                     required
                     type="url"
@@ -1468,7 +1624,7 @@ export default function App() {
               </div>
             ))}
             <button className="primary" type="submit">
-              Save competency
+              {t(" Save competency ")}
             </button>
           </form>
         </div>
@@ -1481,6 +1637,7 @@ function ResourceForm({
 }: {
   onAdd: (title: string, url: string) => void;
 }) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState(""),
     [url, setUrl] = useState("");
   return (
@@ -1496,8 +1653,8 @@ function ResourceForm({
     >
       <input
         required
-        aria-label="Resource title"
-        placeholder="Resource title"
+        aria-label={t("Resource title")}
+        placeholder={t("Resource title")}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
@@ -1505,14 +1662,14 @@ function ResourceForm({
         required
         type="url"
         pattern="https?://.*"
-        aria-label="Resource URL"
-        placeholder="https://…"
+        aria-label={t("Resource URL")}
+        placeholder={t("https://…")}
         value={url}
         onChange={(e) => setUrl(e.target.value)}
       />
       <button type="submit">
         <Plus size={14} />
-        Add resource
+        {t(" Add resource ")}
       </button>
     </form>
   );

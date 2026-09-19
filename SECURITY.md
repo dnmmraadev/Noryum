@@ -2,7 +2,7 @@
 
 ## Supported version
 
-Security reports are currently assessed against version 0.2.0. Older releases are retained for reference; no maintenance commitment is made for them.
+Security reports are currently assessed against version 0.3.0. Older releases are retained for reference; no maintenance commitment is made for them.
 
 ## Reporting a vulnerability
 

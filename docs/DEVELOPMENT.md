@@ -39,7 +39,7 @@ Then open `http://127.0.0.1:4173`.
 npm run package
 ```
 
-This creates a runnable folder in `release/Noryum/`. Close existing copies of the packaged application before rebuilding. Distribute the entire folder, preferably as a ZIP. The package contains the production application and Electron's runtime and license files; it does not require Node.js on the recipient's computer.
+This creates a runnable folder in `release/<version>/Noryum/`. Close existing copies of the packaged application before rebuilding. Distribute the entire folder, preferably as a ZIP. The package contains the production application and Electron's runtime and license files; it does not require Node.js on the recipient's computer.
 
 An optional electron-builder configuration can produce a single portable executable:
 
@@ -84,3 +84,9 @@ Edit `src/data.ts` to change the default roadmap. Each row specifies an ID, Engl
 ## Release process
 
 Update package.json and the lockfile version, update CHANGELOG.md, run all quality checks, and package on Windows x64. Executable metadata is derived from package.json. Zip the entire Noryum folder and attach it to a matching Git tag release, together with SHA-256 checksums. Keep generated executables and archives out of Git. `NORYUM_PACKAGE_DIR` can select a separate output directory when an older packaged copy is running.
+
+## Localization
+
+English remains the canonical source language. `src/locales/es-419.json` contains the professional Latin American Spanish catalog. `src/i18n.ts` provides the locale subscription, safe display translation, localized search normalization and dynamic-message formatting. Keep status values, IDs and stored content in their canonical form; translate visible labels rather than option values. Notes and user-authored content are never rewritten by language changes. Add tests when extending dynamic messages or curriculum coverage.
+
+Read [Versioning](VERSIONING.md) before publishing. A source commit is not itself a new downloadable release; update the version before building and publishing a new artifact.

@@ -17,10 +17,12 @@ The legacy `%APPDATA%/career-roadmap` directory, `roadmap.json` filename and bro
 
 Existing pinned shortcuts pointing at the old executable should be replaced with a pin to `Noryum.exe`.
 
-## Verification
+## Earlier identity verification (0.2.0)
 
 - Strict type checking, lint, nine existing tests and the production build passed.
 - Executable metadata reports Noryum, the full brand descriptor, version 0.2.0 and original filename Noryum.exe.
 - The embedded ICO was extracted and its largest representation verified pixel-identical to the source ICO. All seven sizes are present.
 - Noryum launched successfully on Windows; its title-bar icon and in-app branding were visually verified.
 - The saved roadmap file had the same SHA-256 hash before and after the rebrand launch.
+
+Current version metadata is derived from package.json during packaging. The visible sidebar version uses the same source. See [Versioning](docs/VERSIONING.md).

@@ -42,3 +42,11 @@ This is a single-user local application. It has no sync, login, publishing servi
 The competency details panel stays visible on the Roadmap. Before selecting a competency, it shows mastery progress, the next checkpoint and suggested skills. Clear the selection to return to that overview without changing the map width.
 
 Drag the bar below the map to resize it vertically between 320 and 1400 pixels. Focus the bar and use Up/Down arrows for 40-pixel adjustments, or Home/End for minimum/maximum height. The height is remembered on this device separately from exported roadmap data.
+
+## Language
+
+Open **Settings → Interface language** and choose **English** or **Español (Latinoamérica)**. In Spanish, this is **Configuración → Idioma de la interfaz**. Changes apply immediately to navigation, forms, built-in competency content, projects and checkpoints. Search accepts both original and localized competency names and ignores accents.
+
+The language preference is saved on this device separately from workspace backups, like the map height. Switching languages does not rewrite notes, URLs, custom competencies, edited curriculum text or progress. Built-in content is translated only while its original text remains unchanged. External resource pages retain their own language.
+
+The application version appears at the bottom of the sidebar. Check it before reporting an issue or choosing a download.

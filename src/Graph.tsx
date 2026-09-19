@@ -1,3 +1,4 @@
+import { useTranslation, skillText, searchText } from "./i18n";
 import { useMemo, useEffect, useState, useRef } from "react";
 import {
   ReactFlow,
@@ -15,6 +16,7 @@ import { checkpoints } from "./data";
 import { ancestors, readiness, unlocked } from "./logic";
 type CardData = {
   title: string;
+  localizedTitle?: boolean;
   color: string;
   status?: string;
   subtitle?: string;
@@ -22,6 +24,7 @@ type CardData = {
   locked?: boolean;
 };
 function Card({ data }: NodeProps<Node<CardData>>) {
+  const { t } = useTranslation();
   return (
     <div
       className={`map-card ${data.kind}`}
@@ -29,21 +32,23 @@ function Card({ data }: NodeProps<Node<CardData>>) {
     >
       <Handle type="target" position={Position.Top} />
       <span className="node-dot" style={{ color: data.color }}>
-        {data.status === "Competent"
-          ? "✓"
-          : data.status === "Learning"
-            ? "◉"
-            : data.status === "Practicing"
-              ? "◈"
-              : data.status === "Skipped"
-                ? "−"
-                : "○"}
+        {t(
+          data.status === "Competent"
+            ? "✓"
+            : data.status === "Learning"
+              ? "◉"
+              : data.status === "Practicing"
+                ? "◈"
+                : data.status === "Skipped"
+                  ? "−"
+                  : "○",
+        )}
       </span>
       <div>
-        <strong>{data.title}</strong>
+        <strong>{data.localizedTitle ? data.title : t(data.title)}</strong>
         <small>
-          {data.subtitle || data.status}
-          {data.locked ? " · prerequisites pending" : ""}
+          {t(data.subtitle || data.status)}
+          {t(data.locked ? " · prerequisites pending" : "")}
         </small>
       </div>
       <Handle type="source" position={Position.Bottom} />
@@ -68,6 +73,7 @@ export default function Graph({
   onSkill: (id: string) => void;
   onCheckpoint: () => void;
 }) {
+  const { t, language } = useTranslation();
   const [instance, setInstance] = useState<ReactFlowInstance<
     Node<CardData>
   > | null>(null);
@@ -95,7 +101,10 @@ export default function Graph({
     const path = cp ? ancestors(cp.requirements, data.skills) : null;
     const visible = data.skills.filter(
       (s) =>
-        (!query || s.title.toLowerCase().includes(query.toLowerCase())) &&
+        (!query ||
+          searchText(`${s.title} ${skillText(s, s.title, language)}`).includes(
+            searchText(query),
+          )) &&
         (!branch || s.branch === branch) &&
         (!status || s.status === status) &&
         (!path || path.has(s.id)),
@@ -127,7 +136,8 @@ export default function Graph({
         type: "card",
         position: { x: col * 260, y: row * 116 + 85 },
         data: {
-          title: s.title,
+          title: skillText(s, s.title, language),
+          localizedTitle: true,
           color: colors[col],
           status: s.status,
           kind: s.id.startsWith("project") ? "project-node" : "skill-node",
@@ -200,7 +210,7 @@ export default function Graph({
           );
     });
     return { nodes, edges, count: visible.length };
-  }, [data, query, branch, status, checkpoint]);
+  }, [data, query, branch, status, checkpoint, t, language]);
   useEffect(() => {
     if (instance) {
       const t = setTimeout(() => {
@@ -228,6 +238,30 @@ export default function Graph({
               onCheckpoint();
             else if (!n.id.startsWith("branch-")) onSkill(n.id);
           }}
+          ariaLabelConfig={
+            language === "es-419"
+              ? {
+                  "controls.ariaLabel": "Controles del mapa",
+                  "controls.zoomIn.ariaLabel": "Acercar",
+                  "controls.zoomOut.ariaLabel": "Alejar",
+                  "controls.fitView.ariaLabel": "Ajustar a la vista",
+                  "controls.interactive.ariaLabel": "Alternar interacción",
+                  "minimap.ariaLabel": "Minimapa",
+                  "handle.ariaLabel": "Conexión de competencia",
+                  "node.a11yDescription.default":
+                    "Presiona Enter o la barra espaciadora para seleccionar una competencia y Escape para cancelar.",
+                  "node.a11yDescription.keyboardDisabled":
+                    "Presiona Enter o la barra espaciadora para seleccionar una competencia.",
+                  "edge.a11yDescription.default":
+                    "Presiona Enter o la barra espaciadora para seleccionar una conexión.",
+                  "node.a11yDescription.ariaLiveMessage": ({
+                    direction,
+                    x,
+                    y,
+                  }) => `Posición: ${x}, ${y}. Dirección: ${direction}.`,
+                }
+              : undefined
+          }
           colorMode={data.settings.theme}
         >
           <Background gap={24} size={1} />
@@ -239,11 +273,12 @@ export default function Graph({
           />
         </ReactFlow>
         <div className="graph-caption">
-          {graph.count} competencies · Drag to explore · Scroll to zoom
+          {t(graph.count)}
+          {t(" competencies · Drag to explore · Scroll to zoom ")}
         </div>
         {!graph.count && (
           <div className="empty graph-empty">
-            No competencies match these filters.
+            {t(" No competencies match these filters. ")}
           </div>
         )}
       </div>
@@ -251,13 +286,13 @@ export default function Graph({
         className="graph-resize"
         role="separator"
         tabIndex={0}
-        aria-label="Roadmap height"
+        aria-label={t("Roadmap height")}
         aria-controls="roadmap-canvas"
         aria-orientation="horizontal"
         aria-valuemin={320}
         aria-valuemax={1400}
         aria-valuenow={Math.round(height)}
-        aria-valuetext={`${Math.round(height)} pixels`}
+        aria-valuetext={t(`${Math.round(height)} pixels`)}
         onPointerDown={(event) => {
           if (event.button !== 0) return;
           event.preventDefault();
@@ -291,7 +326,8 @@ export default function Graph({
           }
         }}
       >
-        <span aria-hidden="true">↕</span> Drag to resize map
+        <span aria-hidden="true">{t("↕")}</span>
+        {t(" Drag to resize map ")}
       </div>
     </>
   );

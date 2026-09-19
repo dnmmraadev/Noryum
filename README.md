@@ -5,7 +5,7 @@
 <h1 align="center">Noryum</h1>
 <p align="center"><strong>Intelligent Business Engineering</strong></p>
 <p align="center">Turn your learning into a clear path from skills to project evidence.</p>
-<p align="center"><a href="https://github.com/dnmmraadev/Noryum/releases/tag/v0.2.0">Download v0.2.0</a> · <a href="docs/USER_GUIDE.md">User guide</a> · <a href="https://github.com/dnmmraadev/Noryum/issues">Get help</a></p>
+<p align="center"><a href="https://github.com/dnmmraadev/Noryum/releases/tag/v0.3.0">Download v0.3.0</a> · <a href="docs/USER_GUIDE.md">User guide</a> · <a href="https://github.com/dnmmraadev/Noryum/issues">Get help</a></p>
 
 ## Build skills with a destination
 
@@ -13,18 +13,22 @@ Noryum is an offline Windows workspace that connects **Business Analysis, Data A
 
 **No account. No subscription. No API key. Your progress stays on your computer.**
 
+![Noryum roadmap with the Latin American Spanish interface](docs/images/roadmap-es.png)
+
 ## What you can do
 
 - **See the whole journey:** explore 92 competencies across seven tracks with prerequisites, search, filters, zoom and a minimap.
 - **Know your next step:** get a study queue based on prerequisites, priorities and your available study time.
 - **Learn by building:** organize five projects with deliverable checklists, notes and evidence links.
 - **Track meaningful progress:** work toward five checkpoints that combine competencies and completed project evidence.
+- **Choose your language:** switch between English and professional Latin American Spanish, including the built-in curriculum. Personal notes and custom content remain as written.
+- **Arrange your workspace:** resize the map vertically and keep competency details visible with an informative overview.
 - **Make it your own:** edit skills, add custom competencies and resources, adjust your study pace, and choose a light or dark theme.
 - **Keep control of your work:** save locally and export or restore a validated JSON backup.
 
 ## Download and start
 
-1. Download **Noryum-0.2.0-Windows-x64.zip** from the [v0.2.0 release](https://github.com/dnmmraadev/Noryum/releases/tag/v0.2.0).
+1. Download **Noryum-0.3.0-Windows-x64.zip** from the [v0.3.0 release](https://github.com/dnmmraadev/Noryum/releases/tag/v0.3.0).
 2. Extract the **entire ZIP** into a folder.
 3. Open **Noryum.exe** inside the Noryum folder. Keep its companion files together.
 4. Choose a competency in Roadmap, set its learning state, and use Study plan to continue.
@@ -32,6 +36,8 @@ Noryum is an offline Windows workspace that connects **Business Analysis, Data A
 Requires Windows 10/11 x64. Node.js is not required to run the download. The application is unsigned; Windows may show a publisher warning. Internet access is only needed for optional external learning resources.
 
 If you previously used the Career Roadmap build, its local progress directory remains compatible. If upgrading from the older Noryum 0.1.x application, export and keep your old data first: automatic migration from that different application has not been verified. See the [backup and recovery guide](docs/USER_GUIDE.md#local-data-recovery-and-backups).
+
+Choose **Settings → Interface language → Español (Latinoamérica)** to use Spanish. Your language preference is saved on this device. The sidebar displays the current app version.
 
 ## Designed for focused, independent learning
 
@@ -45,6 +51,7 @@ Cloud sync, a time tracker, an auto-updater and automatic skills assessment are 
 | --- | --- |
 | Understand progress, checkpoints and backups | [User guide](docs/USER_GUIDE.md) |
 | Run, test or package the source | [Development guide](docs/DEVELOPMENT.md) |
+| Understand release numbers and local folders | [Versioning](docs/VERSIONING.md) |
 | See what changed | [Changelog](CHANGELOG.md) |
 | Report a bug or suggest an improvement | [Contributing](CONTRIBUTING.md) |
 | Understand security reporting | [Security policy](SECURITY.md) |
