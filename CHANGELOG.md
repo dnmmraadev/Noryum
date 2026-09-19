@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0 — 2026-09-18
+
+### Added
+
+- Optional three-step setup with language, starting direction and study pace.
+- A prerequisite-aware first competency recommendation.
+- Resume for interrupted first-run drafts, skip, back navigation and replay from Settings.
+- Save failure recovery that retains choices and never closes the guide before successful persistence.
+
+### Changed
+
+- New workspaces start at one hour per day and five days per week; existing preferences remain unchanged.
+- Setup completion and focus are optional fields in version 1 backups. Older workspaces are not forced through onboarding.
+
+### Validation
+
+Sixteen unit tests and browser checks cover setup, recovery, bilingual content, compatibility and preservation of user progress.
+
 ## 0.3.0 — 2026-09-18
 
 ### Added

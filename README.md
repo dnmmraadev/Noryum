@@ -5,7 +5,7 @@
 <h1 align="center">Noryum</h1>
 <p align="center"><strong>Intelligent Business Engineering</strong></p>
 <p align="center">Turn your learning into a clear path from skills to project evidence.</p>
-<p align="center"><a href="https://github.com/dnmmraadev/Noryum/releases/tag/v0.3.0">Download v0.3.0</a> · <a href="docs/USER_GUIDE.md">User guide</a> · <a href="https://github.com/dnmmraadev/Noryum/issues">Get help</a></p>
+<p align="center"><a href="https://github.com/dnmmraadev/Noryum/releases/tag/v0.4.0">Download v0.4.0</a> · <a href="docs/USER_GUIDE.md">User guide</a> · <a href="https://github.com/dnmmraadev/Noryum/issues">Get help</a></p>
 
 ## Build skills with a destination
 
@@ -14,6 +14,12 @@ Noryum is an offline Windows workspace that connects **Business Analysis, Data A
 **No account. No subscription. No API key. Your progress stays on your computer.**
 
 ![Noryum roadmap with the Latin American Spanish interface](docs/images/roadmap-es.png)
+
+## Start with a little direction
+
+New workspaces open a short guided setup: choose your language, starting area and study rhythm, then open a practical first competency. Skip it when you prefer to explore, or reopen it from Settings. Existing workspaces and progress are preserved.
+
+![Noryum guided setup in Latin American Spanish](docs/images/onboarding-es.png)
 
 ## What you can do
 
@@ -28,7 +34,7 @@ Noryum is an offline Windows workspace that connects **Business Analysis, Data A
 
 ## Download and start
 
-1. Download **Noryum-0.3.0-Windows-x64.zip** from the [v0.3.0 release](https://github.com/dnmmraadev/Noryum/releases/tag/v0.3.0).
+1. Download **Noryum-0.4.0-Windows-x64.zip** from the [v0.4.0 release](https://github.com/dnmmraadev/Noryum/releases/tag/v0.4.0).
 2. Extract the **entire ZIP** into a folder.
 3. Open **Noryum.exe** inside the Noryum folder. Keep its companion files together.
 4. Choose a competency in Roadmap, set its learning state, and use Study plan to continue.
@@ -49,6 +55,7 @@ Cloud sync, a time tracker, an auto-updater and automatic skills assessment are 
 
 | I want to… | Start here |
 | --- | --- |
+| Understand the first-run setup | [Guided setup](docs/ONBOARDING.md) |
 | Understand progress, checkpoints and backups | [User guide](docs/USER_GUIDE.md) |
 | Run, test or package the source | [Development guide](docs/DEVELOPMENT.md) |
 | Understand release numbers and local folders | [Versioning](docs/VERSIONING.md) |

@@ -2,6 +2,13 @@
 
 Verified on Windows x64, September 17â€“18, 2026.
 
+## Version 0.4.0 release checks
+
+- TypeScript, ESLint, all 16 unit tests and production bundling passed.
+- Browser checks passed for first-run display, English/Spanish, back navigation, draft resume, input validation, simulated save failure/retry, completion persistence, skip, replay/cancel and older saved workspaces.
+- Setup does not change skill states, project deliverables or personal notes. Recommendations respect prerequisites.
+- Spanish screenshots were reviewed at 1510×980 and 1100×720. The packaged Windows app passed real file persistence, restart, Spanish language, keyboard navigation and light-theme checks using isolated test data.
+
 ## Version 0.3.0 release checks
 
 - TypeScript and ESLint passed.
