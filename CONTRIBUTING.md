@@ -19,6 +19,8 @@ npm test
 npm run build
 ```
 
+Use the English interface for screenshots and other promotional images published on GitHub. Capture a clean demonstration workspace without personal data.
+
 Include the problem solved, a brief description of the resulting behavior, checks performed and screenshots for visible changes. Add meaningful tests for behavior changes. Do not commit personal data, build outputs, credentials or node_modules.
 
 Be respectful, specific and constructive. Maintainers decide whether to accept contributions; submitting a change does not expand the license permissions.
