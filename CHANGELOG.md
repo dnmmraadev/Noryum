@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.0 — 2026-09-18
+
+### Added
+
+- Immediate language selection between English and professional Latin American Spanish.
+- Localized navigation, forms, built-in curriculum, project deliverables, checkpoints, accessibility labels and activity messages.
+- Accent-insensitive search across original and localized competency names.
+- Adjustable roadmap height with pointer/keyboard controls and a remembered display preference.
+- Permanent Roadmap details panel with progress, next checkpoint and suggested skills before selection.
+- Visible application version and a documented release-numbering policy.
+
+### Compatibility
+
+Language changes preserve personal notes, custom content, canonical states and the version 1 backup format. Language and map height remain device-local preferences. Earlier published release assets are unchanged.
+
 ## 0.2.0 — 2026-09-18
 
 ### Added

@@ -2,6 +2,15 @@
 
 Verified on Windows x64, September 17â€“18, 2026.
 
+## Version 0.3.0 release checks
+
+- TypeScript and ESLint passed.
+- Twelve tests passed, including complete Spanish curriculum coverage, preservation of custom content and canonical backup data, dynamic-message translation and accent-insensitive search.
+- Browser interaction checks passed for immediate language switching, localized competency objectives, Spanish search, canonical dropdown values, unchanged workspace data when switching language, persistence after reload and all navigation views.
+- Spanish screenshots were inspected at 1510×980 and 1100×800. External resource names and the brand descriptor intentionally retain their original names.
+- The packaged 0.3.0 application launched on Windows and switched to Spanish through its native interface. The personal roadmap file retained its original SHA-256 hash.
+- Production frontend bundling and Windows packaging passed; executable metadata reports 0.3.0.0. The Windows ZIP passed archive integrity verification. Existing roadmap resizing tests cover mouse, keyboard, stable panel width and preference persistence.
+
 ## Version 0.2.0 release checks
 
 Type checking, lint, all nine tests, production bundling and Windows packaging passed again for 0.2.0. The executable reports ProductName Noryum and FileVersion/ProductVersion 0.2.0.0. The interactive checks below describe the previously verified implementation; the 0.2.0 update changes documentation and packaging metadata.
