@@ -1,3 +1,9 @@
+import Onboarding from "./Onboarding";
+import {
+  applySetup,
+  recommendFirstSkill,
+  type SetupPreferences,
+} from "./setupLogic";
 import { version } from "../package.json";
 import { useTranslation, skillText, projectText } from "./i18n";
 import {
@@ -103,6 +109,8 @@ export default function App() {
       action: () => void;
     } | null>(null),
     [editor, setEditor] = useState<Skill | null>(null);
+  const [showSetup, setShowSetup] = useState(false);
+  const [newWorkspace, setNewWorkspace] = useState(false);
   const file = useRef<HTMLInputElement>(null);
   const search = useRef<HTMLInputElement>(null);
   const revision = useRef(0);
@@ -113,6 +121,8 @@ export default function App() {
     load()
       .then((d) => {
         setData(d || initialData());
+        setNewWorkspace(!d);
+        setShowSetup(!d);
         setSaved("Saved locally");
       })
       .catch((e) => {
@@ -254,6 +264,37 @@ export default function App() {
             </button>
           </div>
         )}
+      </div>
+    );
+  if (showSetup)
+    return (
+      <div className={`app ${data.settings.theme}`}>
+        <Onboarding
+          data={data}
+          isNew={newWorkspace}
+          onCancel={() => setShowSetup(false)}
+          onComplete={async (
+            preferences: SetupPreferences,
+            skipped: boolean,
+          ) => {
+            const next = applySetup(data, preferences);
+            await save(next);
+            setData(next);
+            setSaved("Saved locally");
+            setNewWorkspace(false);
+            setShowSetup(false);
+            setView("Roadmap");
+            setQuery("");
+            setBranch("");
+            setStatus("");
+            setCheckpoint("");
+            setSelected(
+              skipped
+                ? null
+                : recommendFirstSkill(next, preferences.focus)?.id || null,
+            );
+          }}
+        />
       </div>
     );
   const skill = data.skills.find((s) => s.id === selected);
@@ -1029,7 +1070,21 @@ export default function App() {
             {view === "Settings" && (
               <div className="settings-grid">
                 <article className="card">
-                  <h2>{t("Language")}</h2>
+                  <h2>{t("Make Noryum your own")}</h2>
+                  <p>
+                    {t(
+                      "Revisit your starting direction and study rhythm whenever your goals change.",
+                    )}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setNewWorkspace(false);
+                      setShowSetup(true);
+                    }}
+                  >
+                    {t("Open guided setup")}
+                  </button>
+                  <h2 className="setup-settings-heading">{t("Language")}</h2>
                   <Field title={t("Interface language")}>
                     <select
                       value={language}

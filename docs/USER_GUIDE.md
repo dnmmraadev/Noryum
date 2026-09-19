@@ -1,5 +1,11 @@
 # User guide
 
+## Guided setup
+
+New workspaces begin with an optional three-step guide. Select your language, an area to explore and the time you can dedicate. The last screen recommends an available skill and opens its details after saving. You can go back, skip or resume after closing. Existing users can open **Settings → Open guided setup** (Spanish: **Configuración → Abrir configuración guiada**). Reopening does not reset learning records.
+
+New workspaces default to one hour per day, five days per week. Your existing pace is preserved on upgrade. See [Guided setup](ONBOARDING.md) for recovery and persistence details.
+
 ## Your first session
 
 1. Open Roadmap and choose a competency.

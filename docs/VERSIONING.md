@@ -13,11 +13,11 @@ Before every GitHub push for a release, inspect the latest published tag, summar
 
 Never change files or overwrite assets under an already published version. Publish corrected artifacts under a new version. GitHub Releases associate a tag with release notes and downloadable binaries; see [GitHub's release documentation](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
 
-## Why this release is 0.3.0
+## Why this release is 0.4.0
 
-The last published release is 0.2.0. The adjustable map and permanent details panel were merged after it, and this release adds English/Latin American Spanish language selection and translated learning content. These are new features, so this project uses the next minor version, 0.3.0. It is not a 0.2.1 fix-only release and does not establish a 1.0 stability promise.
+The last published release is 0.3.0. This release adds guided first-run setup, optional replay, a saved starting preference and a practical competency recommendation. These are new user-facing features, so the next minor version is 0.4.0. Existing releases are not overwritten.
 
-The JSON backup schema stays at **version 1**. Backup schema versions are independent of application release numbers. Language and map height are device preferences and do not change the backup contract. Existing 0.2.0/Career Roadmap data remains supported; migration from the older Noryum 0.1.x implementation is still unverified.
+The JSON backup schema stays at **version 1**. The optional setup field is backward compatible; older backups remain valid. Backup schema versions are independent of application release numbers. Language and map height are device preferences and do not change the backup contract. Existing 0.2.0/Career Roadmap data remains supported; migration from the older Noryum 0.1.x implementation is still unverified.
 
 ## Local layout
 
@@ -27,9 +27,10 @@ Noryum/
   source/                    Current Git checkout and development dependencies
   releases/
     0.2.0/                   Published 0.2.0 files, kept unchanged
-    0.3.0/                   Current version's Windows folder, ZIP and checksums
+    0.3.0/                   Previous published release
+    0.4.0/                   Current version's Windows folder, ZIP and checksums
   builds/
-    0.3.0/                   Screenshots and verification artifacts
+    0.4.0/                   Screenshots and verification artifacts
   archive/                   Clearly labeled historical and unpublished builds
 ```
 

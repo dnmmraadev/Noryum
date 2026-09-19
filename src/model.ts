@@ -67,6 +67,12 @@ export const schema = z.object({
     hoursPerDay: z.number().min(0.5).max(16),
     daysPerWeek: z.number().int().min(1).max(7),
     theme: z.enum(["dark", "light"]),
+    onboarding: z
+      .object({
+        completed: z.literal(true),
+        focus: z.enum(["all", ...branches]),
+      })
+      .optional(),
   }),
   activity: z.array(z.object({ text: z.string(), date: z.string() })).max(100),
 });

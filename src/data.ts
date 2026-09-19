@@ -260,7 +260,7 @@ export function initialData(): Data {
       end: "",
       deliverables: items.split("|").map((title) => ({ title, done: false })),
     })),
-    settings: { hoursPerDay: 7.5, daysPerWeek: 6, theme: "dark" },
+    settings: { hoursPerDay: 1, daysPerWeek: 5, theme: "dark" },
     activity: [],
   });
 }

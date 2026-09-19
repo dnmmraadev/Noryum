@@ -48,7 +48,7 @@ describe("roadmap integrity and planning", () => {
   it("recalculates time from the weekly pace", () => {
     const d = initialData();
     const before = readiness(checkpoints[0], d).weeks;
-    d.settings.hoursPerDay = 1;
+    d.settings.hoursPerDay = 0.5;
     expect(readiness(checkpoints[0], d).weeks).toBeGreaterThan(before);
   });
   it("round-trips complete data without losses", () => {
