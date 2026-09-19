@@ -13,13 +13,7 @@ Noryum is an offline Windows workspace that connects **Business Analysis, Data A
 
 **No account. No subscription. No API key. Your progress stays on your computer.**
 
-![Noryum roadmap with the Latin American Spanish interface](docs/images/roadmap-es.png)
-
-## Start with a little direction
-
-New workspaces open a short guided setup: choose your language, starting area and study rhythm, then open a practical first competency. Skip it when you prefer to explore, or reopen it from Settings. Existing workspaces and progress are preserved.
-
-![Noryum guided setup in Latin American Spanish](docs/images/onboarding-es.png)
+![Noryum career roadmap in English](docs/images/roadmap-en.png)
 
 ## What you can do
 
@@ -55,7 +49,6 @@ Cloud sync, a time tracker, an auto-updater and automatic skills assessment are 
 
 | I want to… | Start here |
 | --- | --- |
-| Understand the first-run setup | [Guided setup](docs/ONBOARDING.md) |
 | Understand progress, checkpoints and backups | [User guide](docs/USER_GUIDE.md) |
 | Run, test or package the source | [Development guide](docs/DEVELOPMENT.md) |
 | Understand release numbers and local folders | [Versioning](docs/VERSIONING.md) |
