@@ -1,4 +1,5 @@
 import Onboarding from "./Onboarding";
+import { upgradeCurriculum } from "./curriculum";
 import {
   applySetup,
   recommendFirstSkill,
@@ -200,7 +201,7 @@ export default function App() {
   async function importFile(f: File) {
     try {
       if (f.size > 5e6) throw Error("The file must be smaller than 5 MB.");
-      const next = validate(JSON.parse(await f.text()));
+      const next = upgradeCurriculum(validate(JSON.parse(await f.text())));
       const missing = checkpoints
         .flatMap((c) => c.requirements)
         .filter((id) => !next.skills.some((s) => s.id === id));

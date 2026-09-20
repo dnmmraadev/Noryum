@@ -1,4 +1,5 @@
 import { branches, type Data, type Skill, type Checkpoint } from "./model";
+import { contextEngineering } from "./contextCurriculum";
 // Each row is id | title | prerequisites | practical evidence. Branches are parallel tracks.
 const content = [
   `business|Business Fundamentals||Map a business model, customers, costs and revenue
@@ -62,13 +63,13 @@ llmapi|LLM APIs|llm,rest|Build an adapter using a local model or mock API
 tools|Tool / Function Calling|llm,structured,llmapi|Validate tool arguments and limit execution permissions
 aiauto|AI Automation|llmapi,workflow,structured|Integrate model output into a workflow with human review
 rag|RAG Fundamentals|llmapi,pandas|Build retrieval with citations and evaluate grounded answers
-agents|AI Agents Fundamentals|tools|Create a bounded agent with explicit stopping rules
+agents|AI Agents Fundamentals|tools,context|Create a bounded agent with explicit stopping rules
 hitl|Human-in-the-Loop|aiauto|Route uncertain or high-impact outputs for human approval
 eval|AI Evaluation|prompt,structured|Build a held-out evaluation set and report quality and failure rates
 guardrails|Guardrails|hitl,tools|Validate inputs and outputs and test prompt injection boundaries
 aitest|AI System Testing|eval,guardrails|Run regression, safety and integration tests with local fixtures
 aiprocess|AI Process Discovery|opportunity,llm|Identify a useful AI intervention and a non-AI baseline
-aisolution|AI Solution Design|eval,aitest,aiprocess|Design an evaluated solution with cost, privacy and fallback constraints
+aisolution|AI Solution Design|eval,aitest,aiprocess,context|Design an evaluated solution with cost, privacy and fallback constraints
 aiba|AI Business Analysis|aisolution,requirements|Translate an AI opportunity into measurable, testable requirements`,
   `english|Professional English for Technology||Record a clear explanation of a technical project
 english1|English A1–A2||Introduce yourself and describe daily work tasks
@@ -77,7 +78,7 @@ english3|English B2|english2|Present a case study and defend tradeoffs in Englis
 projectba|Business Analysis Project|uat,bpmn,stories|Complete the Business Process Analysis deliverables
 projectdata|BA + Data Analytics Project|projectba,sql2,powerbi,viz|Deliver a dashboard linked to business requirements
 projectauto|Data + Automation Project|projectdata,businessauto,integration|Automate an analytics pipeline with recovery evidence
-projectai|AI Automation Project|projectauto,aiauto,aitest|Demonstrate an evaluated AI workflow with human escalation
+projectai|AI Automation Project|projectauto,aiauto,aitest,context|Demonstrate an evaluated AI workflow with human escalation
 projectfinal|BA + Data + Automation + AI Project|projectai,aiba,bi|Deliver an integrated solution with quantified business outcomes
 casestudy|Case Study Documentation|projectba|Write a problem, approach, evidence and outcome narrative
 portfolio|Professional Portfolio|casestudy,git|Organize accessible evidence with context and clear ownership
@@ -129,6 +130,11 @@ const skills: Skill[] = content.flatMap((block, b) =>
       custom: false,
     } as Skill;
   }),
+);
+skills.splice(
+  skills.findIndex((skill) => skill.id === "agents"),
+  0,
+  contextEngineering,
 );
 const definitions = [
   [
@@ -247,6 +253,7 @@ export const checkpoints: Checkpoint[] = [
 export function initialData(): Data {
   return structuredClone({
     version: 1,
+    curriculumRevision: 1,
     skills,
     projects: definitions.map(([id, title, requirement, items]) => ({
       id,

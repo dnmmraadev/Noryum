@@ -1,4 +1,5 @@
 import { validate, type Data } from "./model";
+import { upgradeCurriculum } from "./curriculum";
 declare global {
   interface Window {
     desktop?: {
@@ -11,7 +12,7 @@ export async function load() {
   const raw = window.desktop
     ? await window.desktop.load()
     : localStorage.getItem("career-roadmap-v1");
-  return raw ? validate(JSON.parse(raw)) : null;
+  return raw ? upgradeCurriculum(validate(JSON.parse(raw))) : null;
 }
 export async function save(data: Data) {
   const text = JSON.stringify(data, null, 2);

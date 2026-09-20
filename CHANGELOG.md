@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.0 — 2026-09-20
+
+### Added
+
+- Context Engineering in Applied AI, with prerequisites, eight measurable mastery criteria, a practical business assignment and six primary-source resources.
+- English and Latin American Spanish curriculum content.
+- An additive, idempotent curriculum upgrade for existing workspaces and imported backups, preserving personal learning records and custom prerequisite graphs.
+
+### Changed
+
+- The roadmap contains 93 competencies. Context Engineering contributes to AI Agents Fundamentals, AI Solution Design and the AI Automation checkpoint.
+- Checkpoint estimates and percentages can reflect the added learning work; completed states remain unchanged.
+
+### Validation
+
+Twenty-one unit tests cover curriculum placement, migration, graph integrity, bilingual content and existing application behavior.
+
 ## 0.4.0 — 2026-09-18
 
 ### Added

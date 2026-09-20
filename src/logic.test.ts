@@ -5,7 +5,7 @@ import { ancestors, plan, progress, readiness, unlocked } from "./logic";
 describe("roadmap integrity and planning", () => {
   it("ships the full valid roadmap with independent English and no cycles", () => {
     const d = validate(initialData());
-    expect(d.skills.length).toBe(92);
+    expect(d.skills.length).toBe(93);
     expect(d.skills.find((s) => s.id === "english")?.prerequisites).toEqual([]);
     expect(d.projects).toHaveLength(5);
   });
