@@ -2,6 +2,14 @@
 
 Verified on Windows x64, September 17â€“18, 2026.
 
+## Version 0.5.0 release checks
+
+- TypeScript, ESLint, all 21 unit tests and production bundling passed on September 20, 2026.
+- Browser checks confirmed legacy-workspace upgrade, English competency details and source links, and Latin American Spanish content.
+- The packaged Windows application loaded an isolated legacy roadmap, displayed the new unit, saved curriculum revision 1 and preserved completed states, personal notes and checked project deliverables.
+- English screenshots were visually reviewed. The new node is visible within the Applied AI branch.
+- Windows executable FileVersion and ProductVersion are 0.5.0.0.
+
 ## Version 0.4.0 release checks
 
 - TypeScript, ESLint, all 16 unit tests and production bundling passed.

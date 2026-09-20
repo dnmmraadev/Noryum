@@ -61,6 +61,7 @@ const projectSchema = z.object({
 });
 export const schema = z.object({
   version: z.literal(1),
+  curriculumRevision: z.number().int().min(0).max(1).optional(),
   skills: z.array(skillSchema).min(1).max(1000),
   projects: z.array(projectSchema),
   settings: z.object({

@@ -56,3 +56,9 @@ Open **Settings → Interface language** and choose **English** or **Español (L
 The language preference is saved on this device separately from workspace backups, like the map height. Switching languages does not rewrite notes, URLs, custom competencies, edited curriculum text or progress. Built-in content is translated only while its original text remains unchanged. External resource pages retain their own language.
 
 The application version appears at the bottom of the sidebar. Check it before reporting an issue or choosing a download.
+
+## Context engineering
+
+In Roadmap, search for **Context Engineering** (Spanish: **Ingeniería de contexto**) in Applied AI. Study Prompt Engineering, RAG Fundamentals, AI Evaluation and Tool / Function Calling first. The unit includes an estimated 24 hours of practice, eight mastery criteria and six source resources. Attach the policy-assistant assignment to the AI Automation project. See the [research and assignment guide](CONTEXT_ENGINEERING.md).
+
+Version 0.5.0 adds this unit when loading or importing older standard workspaces, without resetting personal records. Customized prerequisite lists remain intact. Your completion percentage can change because the curriculum has expanded.

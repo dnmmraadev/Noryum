@@ -5,7 +5,7 @@
 <h1 align="center">Noryum</h1>
 <p align="center"><strong>Intelligent Business Engineering</strong></p>
 <p align="center">Turn your learning into a clear path from skills to project evidence.</p>
-<p align="center"><a href="https://github.com/dnmmraadev/Noryum/releases/tag/v0.4.0">Download v0.4.0</a> · <a href="docs/USER_GUIDE.md">User guide</a> · <a href="https://github.com/dnmmraadev/Noryum/issues">Get help</a></p>
+<p align="center"><a href="https://github.com/dnmmraadev/Noryum/releases/tag/v0.5.0">Download v0.5.0</a> · <a href="docs/USER_GUIDE.md">User guide</a> · <a href="https://github.com/dnmmraadev/Noryum/issues">Get help</a></p>
 
 ## Build skills with a destination
 
@@ -17,7 +17,8 @@ Noryum is an offline Windows workspace that connects **Business Analysis, Data A
 
 ## What you can do
 
-- **See the whole journey:** explore 92 competencies across seven tracks with prerequisites, search, filters, zoom and a minimap.
+- **See the whole journey:** explore 93 competencies across seven tracks with prerequisites, search, filters, zoom and a minimap.
+- **Engineer reliable AI context:** learn context selection, retrieval, memory, token budgets and evaluation through a business policy assistant in the Applied AI track.
 - **Know your next step:** get a study queue based on prerequisites, priorities and your available study time.
 - **Learn by building:** organize five projects with deliverable checklists, notes and evidence links.
 - **Track meaningful progress:** work toward five checkpoints that combine competencies and completed project evidence.
@@ -28,7 +29,7 @@ Noryum is an offline Windows workspace that connects **Business Analysis, Data A
 
 ## Download and start
 
-1. Download **Noryum-0.4.0-Windows-x64.zip** from the [v0.4.0 release](https://github.com/dnmmraadev/Noryum/releases/tag/v0.4.0).
+1. Download **Noryum-0.5.0-Windows-x64.zip** from the [v0.5.0 release](https://github.com/dnmmraadev/Noryum/releases/tag/v0.5.0).
 2. Extract the **entire ZIP** into a folder.
 3. Open **Noryum.exe** inside the Noryum folder. Keep its companion files together.
 4. Choose a competency in Roadmap, set its learning state, and use Study plan to continue.
@@ -50,6 +51,7 @@ Cloud sync, a time tracker, an auto-updater and automatic skills assessment are 
 | I want to… | Start here |
 | --- | --- |
 | Understand progress, checkpoints and backups | [User guide](docs/USER_GUIDE.md) |
+| Study context engineering and its research basis | [Context engineering](docs/CONTEXT_ENGINEERING.md) |
 | Run, test or package the source | [Development guide](docs/DEVELOPMENT.md) |
 | Understand release numbers and local folders | [Versioning](docs/VERSIONING.md) |
 | See what changed | [Changelog](CHANGELOG.md) |
